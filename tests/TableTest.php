@@ -21,8 +21,8 @@ final class TableTest extends TestCase
     protected function setUp(): void
     {
         $this->sheetManager = new SheetManager(new StringHelper());
-        $this->activeSheet = new Sheet(1, '1', $this->sheetManager);
-        $this->table       = new Table(
+        $this->activeSheet  = new Sheet(1, '1', $this->sheetManager);
+        $this->table        = new Table(
             $this->activeSheet,
             'My Heading',
             self::EXCEL_DATA
@@ -97,7 +97,7 @@ final class TableTest extends TestCase
 
     public function testFontRowAttributes(): void
     {
-        self::assertSame(10, $this->table->getFontSize());
+        self::assertSame(8, $this->table->getFontSize());
         self::assertNull($this->table->getRowHeight());
         self::assertFalse($this->table->getTextWrap());
 

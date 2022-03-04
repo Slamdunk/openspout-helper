@@ -16,7 +16,7 @@
         "@default": true,
         "@number": false,
         "global-ignoreSourceCodeByRegex": [
-            "assert\\(.+\\);"
+            "\\\\assert\\(.+\\);"
         ]
     },
     "minMsi": 76,

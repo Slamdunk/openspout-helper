@@ -4,22 +4,33 @@ declare(strict_types=1);
 
 namespace Slam\OpenspoutHelper\CellStyle;
 
-use PhpOffice\PhpSpreadsheet\Cell\DataType;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use PhpOffice\PhpSpreadsheet\Style\Style;
-use Slam\OpenspoutHelper\CellStyleInterface;
+use DateTimeImmutable;
+use OpenSpout\Common\Entity\Cell;
+use OpenSpout\Common\Entity\Style\CellAlignment;
+use OpenSpout\Common\Entity\Style\Style;
+use Slam\OpenspoutHelper\ContentDecoratorInterface;
 
-final class Date implements CellStyleInterface
+final class Date implements ContentDecoratorInterface
 {
-    public function getDataType(): string
+    public const FORMATCODE = 'dd/mm/yyyy';
+
+    public function getDataType(): int
     {
-        return DataType::TYPE_ISO_DATE;
+        return Cell::TYPE_DATE;
     }
 
     public function styleCell(Style $style): void
     {
-        $style->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $style->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_DDMMYYYY);
+        $style->setCellAlignment(CellAlignment::CENTER);
+        $style->setFormat(self::FORMATCODE);
+    }
+
+    public function decorate(mixed $content): mixed
+    {
+        if (! \is_string($content)) {
+            return $content;
+        }
+
+        return new DateTimeImmutable($content);
     }
 }

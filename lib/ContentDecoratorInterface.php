@@ -6,5 +6,5 @@ namespace Slam\OpenspoutHelper;
 
 interface ContentDecoratorInterface extends CellStyleInterface
 {
-    public function decorate(?string $content): ?string;
+    public function decorate(mixed $content): mixed;
 }

@@ -6,13 +6,11 @@ namespace Slam\OpenspoutHelper;
 
 use OpenSpout\Common\Entity\Cell;
 use OpenSpout\Common\Entity\Row;
+use OpenSpout\Common\Entity\Style\CellAlignment;
 use OpenSpout\Common\Entity\Style\Style;
+use OpenSpout\Writer\XLSX\Entity\SheetView;
 use OpenSpout\Writer\XLSX\Writer;
-use PhpOffice\PhpSpreadsheet\Cell\DataType;
-use PhpOffice\PhpSpreadsheet\Exception as PhpspreadsheetException;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Conditional;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
+use Slam\OpenspoutHelper\CellStyle\Text;
 
 final class TableWriter
 {
@@ -21,6 +19,11 @@ final class TableWriter
     public const COLOR_ODD_FILL    = 'D9E1F2';
 
     public const COLUMN_DEFAULT_WIDTH = 10;
+
+    /**
+     * @var CellStyleSpec[]
+     */
+    private array $styles;
 
     public function __construct(
         private string $emptyTableMessage = '',
@@ -36,13 +39,11 @@ final class TableWriter
         $defaultStyle = new Style();
         $defaultStyle->setFontSize($table->getFontSize());
         $defaultStyle->setShouldWrapText($table->getTextWrap());
-        
+
         $writer->setDefaultRowStyle($defaultStyle);
         // if (null !== ($rowHeight = $table->getRowHeight())) {
         //     $writer->setDefaultRowHeight($rowHeight);
         // }
-
-        $this->writeTableHeading($writer, $table);
         $tables = [$table];
 
         $count      = 0;
@@ -54,19 +55,21 @@ final class TableWriter
                 $table->setCount($count - 1);
                 $count = 1;
 
-                $table    = $table->splitTableOnNewWorksheet($writer->addNewSheetAndMakeItCurrent());
-                $tables[] = $table;
-                $this->writeTableHeading($writer, $table);
+                $table      = $table->splitTableOnNewWorksheet($writer->addNewSheetAndMakeItCurrent());
+                $tables[]   = $table;
                 $headingRow = true;
             }
 
             if ($headingRow) {
-                $this->writeColumnsHeading($writer, $table, $row);
+                $columnKeys = \array_keys($row);
+                $this->writeTableProperties($writer, $table, $columnKeys);
+                $this->writeTableHeading($writer, $table);
+                $this->writeColumnsHeading($writer, $table, $columnKeys);
 
                 $headingRow = false;
             }
 
-            $this->writeRow($writer, $table, $row, false);
+            $this->writeRow($writer, $table, $row, $count);
         }
         $table->setCount($count);
 
@@ -85,52 +88,8 @@ final class TableWriter
             }
         }
 
-        foreach ($tables as $table) {
-            $columnCollection = $table->getColumnCollection();
-            foreach ($table->getWrittenColumn() as $columnIndex => $columnKey) {
-                if (! isset($columnCollection[$columnKey])) {
-                    continue;
-                }
-
-                $dataRowStart = $table->getDataRowStart();
-                \assert(null !== $dataRowStart);
-                $columnCollection[$columnKey]->getCellStyle()->styleCell($table->getActiveSheet()->getStyleByColumnAndRow(
-                    $columnIndex,
-                    $dataRowStart,
-                    $columnIndex,
-                    $table->getRowEnd()
-                ));
-            }
-        }
-
-//        if ($table->getFreezePanes()) {
-//            foreach ($tables as $table) {
-//                $table->getActiveSheet()->freezePaneByColumnAndRow(1, 2 + $table->getRowStart());
-//            }
-//        }
-
-        if (0 !== $tables[0]->count()) {
-//            $conditional = $this->getZebraStripingStyle();
-//            foreach ($tables as $table) {
-//                $activeSheet = $table->getActiveSheet();
-//                $activeSheet->setAutoFilterByColumnAndRow(
-//                    $table->getColumnStart(),
-//                    $table->getDataRowStart() - 1,
-//                    $table->getColumnEnd(),
-//                    $table->getRowEnd()
-//                );
-//                $activeSheet->getStyleByColumnAndRow(
-//                    $table->getColumnStart(),
-//                    $table->getDataRowStart(),
-//                    $table->getColumnEnd(),
-//                    $table->getRowEnd()
-//                )->setConditionalStyles([$conditional]);
-//                $activeSheet->setSelectedCellByColumnAndRow(
-//                    $table->getColumnStart(),
-//                    $table->getDataRowStart()
-//                );
-//            }
-        } else {
+        if (0 === $tables[0]->count()) {
+            $this->writeTableHeading($writer, $table);
             $writer->addRow(new Row([], null));
             $table->incrementRow();
             $writer->addRow(new Row([new Cell($this->emptyTableMessage)], null));
@@ -142,55 +101,63 @@ final class TableWriter
         return $tables;
     }
 
+    /**
+     * @param string[] $columnKeys
+     */
+    private function writeTableProperties(Writer $writer, Table $table, array $columnKeys): void
+    {
+        $this->generateStyles($table, $columnKeys);
+        $columnCollection = $table->getColumnCollection();
+        foreach ($columnKeys as $columnIndex => $columnKey) {
+            $width = self::COLUMN_DEFAULT_WIDTH;
+            if (null !== ($column = $columnCollection[$columnKey] ?? null)) {
+                $width = $column->getWidth();
+            }
+
+            $writer->setColumnWidth($width, $columnIndex + 1);
+            $table->incrementColumn();
+        }
+
+        if ($table->getFreezePanes()) {
+            $table->getActiveSheet()->setSheetView(
+                (new SheetView())
+                    ->setFreezeRow(3)
+            );
+        }
+    }
+
     private function writeTableHeading(Writer $writer, Table $table): void
     {
-//        $table->resetColumn();
-//        $table->getActiveSheet()->setCellValueExplicitByColumnAndRow(
-//            $table->getColumnCurrent(),
-//            $table->getRowCurrent(),
-//            $table->getHeading(),
-//            DataType::TYPE_STRING
-//        );
-//
-//        $headingStyle = $table->getActiveSheet()->getStyleByColumnAndRow(
-//            $table->getColumnCurrent(),
-//            $table->getRowCurrent()
-//        );
-//        $headingStyle->getAlignment()->setWrapText(false);
-//        $headingStyle->getFont()->setSize($table->getFontSize() + 2);
+        $style = new Style();
+        $style->setShouldWrapText(false);
+        $style->setFontSize($table->getFontSize() + 2);
 
-        $writer->addRow(new Row([new Cell($table->getHeading())], null));
+        $cell = new Cell($table->getHeading(), $style);
+        $cell->setType(Cell::TYPE_STRING);
+        $writer->addRow(new Row([$cell], null));
 
         $table->incrementRow();
     }
 
     /**
-     * @param array<string, null|float|int|string> $row
+     * @param string[] $columnKeys
      */
-    private function writeColumnsHeading(Writer $writer, Table $table, array $row): void
+    private function writeColumnsHeading(Writer $writer, Table $table, array $columnKeys): void
     {
         $columnCollection = $table->getColumnCollection();
-        $columnKeys       = \array_keys($row);
-
-        $writtenColumn = [];
-        $titles        = [];
+        $writtenColumn    = [];
+        $titles           = [];
         foreach ($columnKeys as $columnIndex => $columnKey) {
-            $width    = self::COLUMN_DEFAULT_WIDTH;
             $newTitle = \ucwords(\str_replace('_', ' ', $columnKey));
-
             if (null !== ($column = $columnCollection[$columnKey] ?? null)) {
-                $width    = $column->getWidth();
                 $newTitle = $column->getHeading();
             }
 
-//            $table->getActiveSheet()->getColumnDimensionByColumn($table->getColumnCurrent())->setWidth($width);
             $writtenColumn[$columnIndex] = $columnKey;
             $titles[$columnKey]          = $newTitle;
-
-            $table->incrementColumn();
         }
 
-        $this->writeRow($writer, $table, $titles, true);
+        $this->writeRow($writer, $table, $titles, 0);
 
         $table->setWrittenColumn($writtenColumn);
         $table->flagDataRowStart();
@@ -199,73 +166,79 @@ final class TableWriter
     /**
      * @param array<string, null|float|int|string> $row
      */
-    private function writeRow(Writer $writer, Table $table, array $row, bool $isTitle): void
+    private function writeRow(Writer $writer, Table $table, array $row, int $odd): void
     {
-        $cells = [];
+        $isTitle = 0 === $odd;
+        $cells   = [];
         foreach ($row as $key => $content) {
-            $content  = null !== $content
-                ? (string) $content
-                : null
-            ;
-//            $dataType = DataType::TYPE_STRING;
-//            if (null === $content) {
-//                $dataType = DataType::TYPE_NULL;
-//            } elseif (
-//                ! $isTitle
-//                && 0 !== ($columnCollection = $table->getColumnCollection())->count()
-//                && isset($columnCollection[$key])
-//            ) {
-//                $cellStyle = $columnCollection[$key]->getCellStyle();
-//                $dataType  = $cellStyle->getDataType();
-//                if ($cellStyle instanceof ContentDecoratorInterface) {
-//                    $content = $cellStyle->decorate($content);
-//                }
-//            }
+            $dataType = Cell::TYPE_STRING;
+            if (null === $content) {
+                $dataType = Cell::TYPE_EMPTY;
+            } elseif (
+                ! $isTitle
+                && isset($this->styles[$key])
+            ) {
+                $cellStyle = $this->styles[$key]->cellStyle;
+                $dataType  = $cellStyle->getDataType();
+                if ($cellStyle instanceof ContentDecoratorInterface) {
+                    $content = $cellStyle->decorate($content);
+                }
+            }
 
-            $cells[] = new Cell($content);
+            $cellStyleSpec = $this->styles[$key];
+            $cell          = new Cell(
+                $content,
+                $isTitle
+                    ? $cellStyleSpec->headerStyle
+                    : (
+                        (1 === ($odd % 2))
+                        ? $cellStyleSpec->zebraLightStyle
+                        : $cellStyleSpec->zebraDarkStyle
+                    )
+            );
+            $cell->setType($dataType);
+            $cells[] = $cell;
         }
-        
+
         $writer->addRow(new Row($cells, null));
-
-//        if (null !== ($rowHeight = $table->getRowHeight())) {
-//            $sheet->getRowDimension($table->getRowCurrent())->setRowHeight($rowHeight);
-//        }
-
-//        if ($isTitle) {
-//            $titleStyle = $sheet->getStyleByColumnAndRow(
-//                $table->getColumnStart(),
-//                $table->getRowCurrent(),
-//                $table->getColumnEnd(),
-//                $table->getRowCurrent(),
-//            );
-//            $alignment = $titleStyle->getAlignment();
-//            $alignment->setHorizontal(Alignment::HORIZONTAL_CENTER);
-//            $alignment->setVertical(Alignment::VERTICAL_CENTER);
-//            $alignment->setWrapText(true);
-//            $font = $titleStyle->getFont();
-//            $font->getColor()->setARGB(self::COLOR_HEADER_FONT);
-//            $font->setBold(true);
-//            $fill = $titleStyle->getFill();
-//            $fill->setFillType(Fill::FILL_SOLID);
-//            $fill->getStartColor()->setARGB(self::COLOR_HEADER_FILL);
-//            $fill->getEndColor()->setARGB(self::COLOR_HEADER_FILL);
-//        }
 
         $table->incrementRow();
     }
 
-    private function getZebraStripingStyle(): Conditional
+    /**
+     * @param string[] $columnKeys
+     */
+    private function generateStyles(Table $table, array $columnKeys): void
     {
-        $conditional = new Conditional();
-        $conditional->setConditionType(Conditional::CONDITION_EXPRESSION);
-        $conditional->setOperatorType(Conditional::OPERATOR_EQUAL);
-        $conditional->addCondition('MOD(ROW(),2)=0');
-        $style = $conditional->getStyle();
-        $fill  = $style->getFill();
-        $fill->setFillType(Fill::FILL_SOLID);
-        $fill->getStartColor()->setARGB(self::COLOR_ODD_FILL);
-        $fill->getEndColor()->setARGB(self::COLOR_ODD_FILL);
+        $columnCollection = $table->getColumnCollection();
+        $this->styles     = [];
+        foreach ($columnKeys as $columnKey) {
+            $header = new Style();
+            $header->setCellAlignment(CellAlignment::CENTER);
+            $header->setShouldWrapText(true);
+            $header->setBackgroundColor(self::COLOR_HEADER_FILL);
+            $header->setFontSize($table->getFontSize());
+            $header->setFontBold();
+            $header->setFontColor(self::COLOR_HEADER_FONT);
 
-        return $conditional;
+            $zebraLight = new Style();
+            $zebraLight->setFontSize($table->getFontSize());
+
+            $zebraDark = new Style();
+            $zebraDark->setFontSize($table->getFontSize());
+            $zebraDark->setBackgroundColor(self::COLOR_ODD_FILL);
+
+            $cellStyle = ($columnCollection[$columnKey] ?? null)?->getCellStyle() ?? new Text();
+
+            $cellStyle->styleCell($zebraLight);
+            $cellStyle->styleCell($zebraDark);
+
+            $this->styles[$columnKey] = new CellStyleSpec(
+                $cellStyle,
+                $header,
+                $zebraLight,
+                $zebraDark,
+            );
+        }
     }
 }

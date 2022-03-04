@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Slam\OpenspoutHelper\Tests;
 
 use OpenSpout\Writer\Common\Creator\WriterEntityFactory;
-use PhpOffice\PhpSpreadsheet;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\RichText\RichText;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PHPUnit\Framework\TestCase;
 use Slam\OpenspoutHelper\CellStyle;
 use Slam\OpenspoutHelper\Column;
 use Slam\OpenspoutHelper\ColumnCollection;
-use Slam\OpenspoutHelper\Exception;
 use Slam\OpenspoutHelper\Table;
 use Slam\OpenspoutHelper\TableWriter;
 
@@ -78,7 +77,7 @@ final class TableWriterTest extends TestCase
         $XLSXWriter  = WriterEntityFactory::createXLSXWriter();
         $XLSXWriter->openToFile($this->filename);
         $activeSheet = $XLSXWriter->getCurrentSheet();
-        $activeSheet->setName(uniqid());
+        $activeSheet->setName(\uniqid());
         $table   = new Table($activeSheet, $heading, [
             ['description' => $data],
         ]);
@@ -102,7 +101,7 @@ final class TableWriterTest extends TestCase
         $XLSXWriter->openToFile($this->filename);
 
         $columnCollection = new ColumnCollection(...[
-            new Column('disorder', 'Foo99', 11, new CellStyle\Text()),
+            new Column('disorder', 'Foo50', 50, new CellStyle\Text()),
 
             new Column('my_text', 'Foo1', 11, new CellStyle\Text()),
             new Column('my_perc', 'Foo2', 12, new CellStyle\Percentage()),
@@ -110,8 +109,8 @@ final class TableWriterTest extends TestCase
             new Column('my_date', 'Foo4', 14, new CellStyle\Date()),
             new Column('my_amnt', 'Foo5', 15, new CellStyle\Amount()),
             new Column('my_itfc', 'Foo6', 16, new CellStyle\Text()),
-            new Column('my_nodd', 'Foo7', 14, new CellStyle\Date()),
-            new Column('my_padd', 'Foo8', 14, new CellStyle\PaddedInteger()),
+            new Column('my_nodd', 'Foo7', 17, new CellStyle\Date()),
+            new Column('my_padd', 'Foo8', 18, new CellStyle\Integer()),
         ]);
 
         $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid('Heading_'), [
@@ -137,99 +136,115 @@ final class TableWriterTest extends TestCase
         $firstSheet = (new Xlsx())->load($this->filename)->getActiveSheet();
 
         $expectedContent = [
-            'A1' => null,
-            'A2' => $table->getHeading(),
+            'A1' => $table->getHeading(),
 
-            'A3' => 'Foo1',
-            'B3' => 'Foo2',
-            'C3' => 'Foo3',
-            'D3' => 'Foo4',
-            'E3' => 'Foo5',
-            'F3' => 'Foo6',
-            'G3' => 'Foo7',
-            'H3' => 'Foo8',
-            'I3' => 'Foo99',
-            'J3' => 'No Column',
+            'A2' => 'Foo1',
+            'B2' => 'Foo2',
+            'C2' => 'Foo3',
+            'D2' => 'Foo4',
+            'E2' => 'Foo5',
+            'F2' => 'Foo6',
+            'G2' => 'Foo7',
+            'H2' => 'Foo8',
+            'I2' => 'Foo50',
+            'J2' => 'No Column',
 
-            'A4' => 'text',
-            'B4' => 3.45,
-            'C4' => 1234567.8,
-            'D4' => 42796.0,
-            'E4' => 1234567.89,
-            'F4' => 'AABB',
-            'G4' => null,
-            'H4' => 123,
-            'I4' => 'disorder',
-            'J4' => 'no_column',
+            'A3' => 'text',
+            'B3' => 3.45,
+            'C3' => 1234567.8,
+            'D3' => 42796,
+            'E3' => 1234567.89,
+            'F3' => 'AABB',
+            'G3' => null,
+            'H3' => '0123',
+            'I3' => 'disorder',
+            'J3' => 'no_column',
         ];
 
         $expectedDataType = [
-            'A1' => DataType::TYPE_NULL,
-            'A2' => DataType::TYPE_STRING,
+            'A1' => DataType::TYPE_INLINE,
 
-            'A3' => DataType::TYPE_STRING,
-            'B3' => DataType::TYPE_STRING,
-            'C3' => DataType::TYPE_STRING,
-            'D3' => DataType::TYPE_STRING,
-            'E3' => DataType::TYPE_STRING,
-            'F3' => DataType::TYPE_STRING,
-            'G3' => DataType::TYPE_STRING,
+            'A2' => DataType::TYPE_INLINE,
+            'B2' => DataType::TYPE_INLINE,
+            'C2' => DataType::TYPE_INLINE,
+            'D2' => DataType::TYPE_INLINE,
+            'E2' => DataType::TYPE_INLINE,
+            'F2' => DataType::TYPE_INLINE,
+            'G2' => DataType::TYPE_INLINE,
+            'H2' => DataType::TYPE_INLINE,
+            'I2' => DataType::TYPE_INLINE,
+            'J2' => DataType::TYPE_INLINE,
+
+            'A3' => DataType::TYPE_INLINE,
+            'B3' => DataType::TYPE_NUMERIC,
+            'C3' => DataType::TYPE_NUMERIC,
+            'D3' => DataType::TYPE_NUMERIC,
+            'E3' => DataType::TYPE_NUMERIC,
+            'F3' => DataType::TYPE_INLINE,
+            'G3' => DataType::TYPE_NULL,
             'H3' => DataType::TYPE_STRING,
-            'I3' => DataType::TYPE_STRING,
-            'J3' => DataType::TYPE_STRING,
-
-            'A4' => DataType::TYPE_STRING,
-            'B4' => DataType::TYPE_NUMERIC,
-            'C4' => DataType::TYPE_NUMERIC,
-            'D4' => DataType::TYPE_NUMERIC,
-            'E4' => DataType::TYPE_NUMERIC,
-            'F4' => DataType::TYPE_STRING,
-            'G4' => DataType::TYPE_NULL,
-            'H4' => DataType::TYPE_NUMERIC,
-            'I4' => DataType::TYPE_STRING,
-            'J4' => DataType::TYPE_STRING,
+            'I3' => DataType::TYPE_INLINE,
+            'J3' => DataType::TYPE_INLINE,
         ];
 
         $expectedNumberFormat = [
             'A1' => NumberFormat::FORMAT_GENERAL,
+
             'A2' => NumberFormat::FORMAT_GENERAL,
+            'B2' => NumberFormat::FORMAT_GENERAL,
+            'C2' => NumberFormat::FORMAT_GENERAL,
+            'D2' => NumberFormat::FORMAT_GENERAL,
+            'E2' => NumberFormat::FORMAT_GENERAL,
+            'F2' => NumberFormat::FORMAT_GENERAL,
+            'G2' => NumberFormat::FORMAT_GENERAL,
+            'H2' => NumberFormat::FORMAT_GENERAL,
+            'I2' => NumberFormat::FORMAT_GENERAL,
+            'J2' => NumberFormat::FORMAT_GENERAL,
 
             'A3' => NumberFormat::FORMAT_GENERAL,
-            'B3' => NumberFormat::FORMAT_GENERAL,
-            'C3' => NumberFormat::FORMAT_GENERAL,
-            'D3' => NumberFormat::FORMAT_GENERAL,
-            'E3' => NumberFormat::FORMAT_GENERAL,
+            'B3' => CellStyle\Percentage::FORMATCODE,
+            'C3' => CellStyle\Integer::FORMATCODE,
+            'D3' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'E3' => CellStyle\Amount::FORMATCODE,
             'F3' => NumberFormat::FORMAT_GENERAL,
-            'G3' => NumberFormat::FORMAT_GENERAL,
-            'H3' => NumberFormat::FORMAT_GENERAL,
+            'G3' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'H3' => CellStyle\Integer::FORMATCODE,
             'I3' => NumberFormat::FORMAT_GENERAL,
             'J3' => NumberFormat::FORMAT_GENERAL,
+        ];
 
-            'A4' => NumberFormat::FORMAT_GENERAL,
-            'B4' => CellStyle\Percentage::FORMATCODE,
-            'C4' => CellStyle\Integer::FORMATCODE,
-            'D4' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'E4' => CellStyle\Amount::FORMATCODE,
-            'F4' => NumberFormat::FORMAT_GENERAL,
-            'G4' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'H4' => '0000',
-            'I4' => NumberFormat::FORMAT_GENERAL,
-            'J4' => NumberFormat::FORMAT_GENERAL,
+        $expectedWidths = [
+            'A' => 11,
+            'B' => 12,
+            'C' => 13,
+            'D' => 14,
+            'E' => 15,
+            'F' => 16,
+            'G' => 17,
+            'H' => 18,
+            'I' => 50,
+            'J' => TableWriter::COLUMN_DEFAULT_WIDTH,
         ];
 
         $actualContent      = [];
         $actualDataType     = [];
         $actualNumberFormat = [];
+        $actualWidths       = [];
         foreach ($expectedContent as $coordinate => $content) {
             $cell                            = $firstSheet->getCell($coordinate);
-            $actualContent[$coordinate]      = $cell->getValue();
+            $actualContent[$coordinate]      = (($value = $cell->getValue()) instanceof RichText)
+                ? (string) $value
+                : $value
+            ;
             $actualDataType[$coordinate]     = $cell->getDataType();
             $actualNumberFormat[$coordinate] = $cell->getStyle()->getNumberFormat()->getFormatCode();
+            $actualWidths[$coordinate[0]]    = (int) $firstSheet->getColumnDimension($coordinate[0])->getWidth();
         }
 
         self::assertSame($expectedContent, $actualContent);
         self::assertSame($expectedDataType, $actualDataType);
         self::assertSame($expectedNumberFormat, $actualNumberFormat);
+        self::assertSame($expectedWidths, $actualWidths);
     }
 
     public function testTablePagination(): void
@@ -293,7 +308,7 @@ final class TableWriterTest extends TestCase
     public function testEmptyTable(): void
     {
         $emptyTableMessage = \uniqid('no_data_');
-        $XLSXWriter  = WriterEntityFactory::createXLSXWriter();
+        $XLSXWriter        = WriterEntityFactory::createXLSXWriter();
         $XLSXWriter->openToFile($this->filename);
 
         $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid(), []);
@@ -347,23 +362,5 @@ final class TableWriterTest extends TestCase
         self::assertSame(12, (int) $style->getFont()->getSize());
         // self::assertSame(33, (int) $firstSheet->getRowDimension($cell->getRow())->getRowHeight());
         self::assertTrue($style->getAlignment()->getWrapText());
-    }
-
-    public function testRaiseSpecificException(): void
-    {
-        $source  = new PhpSpreadsheet\Spreadsheet();
-        $heading = \uniqid('Heading_');
-        $table   = new Table($source->getActiveSheet(), 3, 4, $heading, [
-            ['description' => '123'],
-            ['description' => 'ABC'],
-        ]);
-        $table->setColumnCollection(new ColumnCollection(...[
-            new Column('description', 'Foo', 10, new CellStyle\Integer()),
-        ]));
-
-        $this->expectException(Exception::class);
-        $this->expectErrorMessageMatches('/ABC/');
-
-        (new TableWriter())->writeTable($table);
     }
 }

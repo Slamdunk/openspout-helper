@@ -10,12 +10,12 @@ use OpenSpout\Writer\Common\Entity\Sheet;
 final class Table implements Countable
 {
     private Sheet $activeSheet;
-    private int $rowStart = 0;
+    private int $rowStart      = 0;
     private ?int $dataRowStart = null;
-    private int $rowEnd = 0;
-    private int $rowCurrent = 0;
-    private int $columnStart = 0;
-    private int $columnEnd = 0;
+    private int $rowEnd        = 0;
+    private int $rowCurrent    = 0;
+    private int $columnStart   = 0;
+    private int $columnEnd     = 0;
     private int $columnCurrent = 0;
     private string $heading;
 
@@ -25,7 +25,7 @@ final class Table implements Countable
     private iterable $data;
     private ColumnCollection $columnCollection;
     private bool $freezePanes = true;
-    private int $fontSize     = 10;
+    private int $fontSize     = 8;
     private ?int $rowHeight   = null;
     private bool $textWrap    = false;
 
@@ -41,8 +41,8 @@ final class Table implements Countable
     public function __construct(Sheet $activeSheet, string $heading, iterable $data)
     {
         $this->activeSheet = $activeSheet;
-        $this->heading = $heading;
-        $this->data = $data;
+        $this->heading     = $heading;
+        $this->data        = $data;
 
         $this->columnCollection = new ColumnCollection();
     }

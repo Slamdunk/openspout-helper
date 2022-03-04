@@ -2,9 +2,9 @@
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/slam/openspout-helper.svg)](https://packagist.org/packages/slam/openspout-helper)
 [![Downloads](https://img.shields.io/packagist/dt/slam/openspout-helper.svg)](https://packagist.org/packages/slam/openspout-helper)
-[![Integrate](https://github.com/Slamdunk/openspout-helper/workflows/Integrate/badge.svg?branch=master)](https://github.com/Slamdunk/openspout-helper/actions)
-[![Code Coverage](https://codecov.io/gh/Slamdunk/openspout-helper/coverage.svg?branch=master)](https://codecov.io/gh/Slamdunk/openspout-helper?branch=master)
-[![Infection MSI](https://badge.stryker-mutator.io/github.com/Slamdunk/openspout-helper/master)](https://dashboard.stryker-mutator.io/reports/github.com/Slamdunk/openspout-helper/master)
+[![Integrate](https://github.com/Slamdunk/openspout-helper/workflows/Integrate/badge.svg?branch=main)](https://github.com/Slamdunk/openspout-helper/actions)
+[![Code Coverage](https://codecov.io/gh/Slamdunk/openspout-helper/coverage.svg?branch=main)](https://codecov.io/gh/Slamdunk/openspout-helper?branch=main)
+[![Infection MSI](https://badge.stryker-mutator.io/github.com/Slamdunk/openspout-helper/main)](https://dashboard.stryker-mutator.io/reports/github.com/Slamdunk/openspout-helper/main)
 
 ## Installation
 

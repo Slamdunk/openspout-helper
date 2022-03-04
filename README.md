@@ -2,7 +2,7 @@
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/slam/openspout-helper.svg)](https://packagist.org/packages/slam/openspout-helper)
 [![Downloads](https://img.shields.io/packagist/dt/slam/openspout-helper.svg)](https://packagist.org/packages/slam/openspout-helper)
-[![Integrate](https://github.com/Slamdunk/openspout-helper/workflows/Integrate/badge.svg?branch=main)](https://github.com/Slamdunk/openspout-helper/actions)
+[![CI](https://github.com/Slamdunk/openspout-helper/actions/workflows/ci.yaml/badge.svg)](https://github.com/Slamdunk/openspout-helper/actions/workflows/ci.yaml)
 [![Code Coverage](https://codecov.io/gh/Slamdunk/openspout-helper/coverage.svg?branch=main)](https://codecov.io/gh/Slamdunk/openspout-helper?branch=main)
 [![Infection MSI](https://badge.stryker-mutator.io/github.com/Slamdunk/openspout-helper/main)](https://dashboard.stryker-mutator.io/reports/github.com/Slamdunk/openspout-helper/main)
 
@@ -13,6 +13,7 @@
 ## Usage
 
 ```php
+use OpenSpout\Writer\Common\Creator\WriterEntityFactory;
 use Slam\OpenspoutHelper as ExcelHelper;
 
 require __DIR__ . '/vendor/autoload.php';
@@ -38,15 +39,16 @@ $columnCollection = new ExcelHelper\ColumnCollection(...[
     new ExcelHelper\Column('column_3',  'Date',     15,     new ExcelHelper\CellStyle\Date()),
 ]);
 
-$spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+$XLSXWriter  = WriterEntityFactory::createXLSXWriter();
+$XLSXWriter->openToFile(__DIR__.'/test.xlsx');
 
-$activeSheet = $spreadsheet->getActiveSheet();
-$activeSheet->setTitle('My Users');
-$table = new ExcelHelper\Table($activeSheet, 1, 1, 'My Heading', $users);
+$activeSheet = $XLSXWriter->getCurrentSheet();
+$activeSheet->setName('My Users');
+$table = new ExcelHelper\Table($activeSheet, 'My Heading', $users);
 $table->setColumnCollection($columnCollection);
 
-(new ExcelHelper\TableWriter())->writeTable($table);
-(new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet))->save(__DIR__.'/test.xlsx');
+(new ExcelHelper\TableWriter())->writeTable($XLSXWriter, $table);
+$XLSXWriter->close();
 ```
 
 Result:

@@ -48,6 +48,9 @@ jobs:
       - name: "Normalize composer.json"
         run: "composer-normalize --dry-run"
 
+      - name: "Require checker"
+        run: "composer-require-checker"
+
   tests:
     name: "Tests"
 

@@ -78,7 +78,7 @@ final class TableWriter
             $table      = \current($tables);
             $firstSheet = $table->getActiveSheet();
             // In Excel the maximum length for a sheet name is 30
-            $originalName = \mb_substr($firstSheet->getName(), 0, 21);
+            $originalName = \substr($firstSheet->getName(), 0, 21);
 
             $sheetCounter = 0;
             $sheetTotal   = \count($tables);

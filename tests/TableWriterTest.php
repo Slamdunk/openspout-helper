@@ -110,7 +110,7 @@ final class TableWriterTest extends TestCase
             new Column('my_amnt', 'Foo5', 15, new CellStyle\Amount()),
             new Column('my_itfc', 'Foo6', 16, new CellStyle\Text()),
             new Column('my_nodd', 'Foo7', 17, new CellStyle\Date()),
-            new Column('my_padd', 'Foo8', 18, new CellStyle\Integer()),
+            new Column('my_padd', 'Foo8', 18, new CellStyle\PaddedInteger()),
         ]);
 
         $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid('Heading_'), [
@@ -208,7 +208,7 @@ final class TableWriterTest extends TestCase
             'E3' => CellStyle\Amount::FORMATCODE,
             'F3' => NumberFormat::FORMAT_GENERAL,
             'G3' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'H3' => CellStyle\Integer::FORMATCODE,
+            'H3' => '0000',
             'I3' => NumberFormat::FORMAT_GENERAL,
             'J3' => NumberFormat::FORMAT_GENERAL,
         ];

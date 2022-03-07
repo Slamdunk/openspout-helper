@@ -21,7 +21,7 @@ final class TableWriter
     public const COLUMN_DEFAULT_WIDTH = 10;
 
     /**
-     * @var CellStyleSpec[]
+     * @var array<string, CellStyleSpec>
      */
     private array $styles;
 
@@ -61,6 +61,8 @@ final class TableWriter
             }
 
             if ($headingRow) {
+                $this->consumeFirstRow($table, $row);
+
                 $columnKeys = \array_keys($row);
                 $this->writeTableProperties($writer, $table, $columnKeys);
                 $this->writeTableHeading($writer, $table);
@@ -239,6 +241,19 @@ final class TableWriter
                 $zebraLight,
                 $zebraDark,
             );
+        }
+    }
+
+    /**
+     * @param array<string, null|float|int|string> $row
+     */
+    private function consumeFirstRow(Table $table, array $row): void
+    {
+        foreach ($table->getColumnCollection() as $column) {
+            $style = $column->getCellStyle();
+            if ($style instanceof ContentConsumerInterface) {
+                $style->consume($row[$column->getKey()]);
+            }
         }
     }
 }

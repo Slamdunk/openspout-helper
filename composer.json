@@ -17,7 +17,7 @@
         "infection/infection": "^0.26.6",
         "malukenho/mcbumpface": "^1.1.5",
         "phpoffice/phpspreadsheet": "^1.22.0",
-        "phpstan/phpstan": "^1.4.7",
+        "phpstan/phpstan": "^1.4.8",
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpunit": "^9.5.16",
         "slam/php-cs-fixer-extensions": "^3.1.0"

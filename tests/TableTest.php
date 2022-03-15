@@ -101,7 +101,7 @@ final class TableTest extends TestCase
         self::assertNull($this->table->getRowHeight());
         self::assertFalse($this->table->getTextWrap());
 
-        $this->table->setFontSize($fontSize = \mt_rand(10, 100));
+        $this->table->setFontSize($fontSize   = \mt_rand(10, 100));
         $this->table->setRowHeight($rowHeight = \mt_rand(10, 100));
         $this->table->setTextWrap(true);
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Slam\OpenspoutHelper\CellStyle;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use OpenSpout\Common\Entity\Cell;
 use OpenSpout\Common\Entity\Style\CellAlignment;
 use OpenSpout\Common\Entity\Style\Style;
@@ -31,6 +32,6 @@ final class Date implements ContentDecoratorInterface
             return $content;
         }
 
-        return new DateTimeImmutable($content);
+        return new DateTimeImmutable($content, new DateTimeZone('UTC'));
     }
 }

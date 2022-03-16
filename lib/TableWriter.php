@@ -251,7 +251,7 @@ final class TableWriter
     {
         foreach ($table->getColumnCollection() as $column) {
             $style = $column->getCellStyle();
-            if ($style instanceof ContentConsumerInterface) {
+            if ($style instanceof ContentConsumerInterface && isset($row[$column->getKey()])) {
                 $style->consume($row[$column->getKey()]);
             }
         }

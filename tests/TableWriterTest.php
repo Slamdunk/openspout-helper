@@ -111,6 +111,8 @@ final class TableWriterTest extends TestCase
             new Column('my_itfc', 'Foo6', 16, new CellStyle\Text()),
             new Column('my_nodd', 'Foo7', 17, new CellStyle\Date()),
             new Column('my_padd', 'Foo8', 18, new CellStyle\PaddedInteger()),
+
+            new Column(\uniqid('non_existent_'), 'Foo8', 18, new CellStyle\PaddedInteger()),
         ]);
 
         $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid('Heading_'), [

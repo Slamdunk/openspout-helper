@@ -12,9 +12,9 @@ final class Amount implements CellStyleInterface
 {
     public const FORMATCODE = '#,##0.00';
 
-    public function getDataType(): int
+    public function getDataType(): string
     {
-        return Cell::TYPE_NUMERIC;
+        return Cell\NumericCell::class;
     }
 
     public function styleCell(Style $style): void

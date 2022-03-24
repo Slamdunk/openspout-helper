@@ -40,7 +40,7 @@ final class TableWriter
         $defaultStyle->setFontSize($table->getFontSize());
         $defaultStyle->setShouldWrapText($table->getTextWrap());
 
-        $writer->setDefaultRowStyle($defaultStyle);
+        $writer->getOptions()->DEFAULT_ROW_STYLE = $defaultStyle;
         // if (null !== ($rowHeight = $table->getRowHeight())) {
         //     $writer->setDefaultRowHeight($rowHeight);
         // }
@@ -94,7 +94,7 @@ final class TableWriter
             $this->writeTableHeading($writer, $table);
             $writer->addRow(new Row([], null));
             $table->incrementRow();
-            $writer->addRow(new Row([new Cell($this->emptyTableMessage)], null));
+            $writer->addRow(new Row([new Cell\StringCell($this->emptyTableMessage, null)], null));
             $table->incrementRow();
         }
 
@@ -116,7 +116,7 @@ final class TableWriter
                 $width = $column->getWidth();
             }
 
-            $writer->setColumnWidth($width, $columnIndex + 1);
+            $writer->getOptions()->setColumnWidth($width, $columnIndex + 1);
             $table->incrementColumn();
         }
 
@@ -134,8 +134,7 @@ final class TableWriter
         $style->setShouldWrapText(false);
         $style->setFontSize($table->getFontSize() + 2);
 
-        $cell = new Cell($table->getHeading(), $style);
-        $cell->setType(Cell::TYPE_STRING);
+        $cell = new Cell\StringCell($table->getHeading(), $style);
         $writer->addRow(new Row([$cell], null));
 
         $table->incrementRow();
@@ -173,9 +172,9 @@ final class TableWriter
         $isTitle = 0 === $odd;
         $cells   = [];
         foreach ($row as $key => $content) {
-            $dataType = Cell::TYPE_STRING;
+            $dataType = Cell\StringCell::class;
             if (null === $content) {
-                $dataType = Cell::TYPE_EMPTY;
+                $dataType = Cell\EmptyCell::class;
             } elseif (
                 ! $isTitle
                 && isset($this->styles[$key])
@@ -188,7 +187,7 @@ final class TableWriter
             }
 
             $cellStyleSpec = $this->styles[$key];
-            $cell          = new Cell(
+            $cell          = new $dataType(
                 $content,
                 $isTitle
                     ? $cellStyleSpec->headerStyle
@@ -198,7 +197,6 @@ final class TableWriter
                         : $cellStyleSpec->zebraDarkStyle
                     )
             );
-            $cell->setType($dataType);
             $cells[] = $cell;
         }
 

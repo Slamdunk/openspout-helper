@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Slam\OpenspoutHelper\Tests;
 
-use OpenSpout\Writer\Common\Creator\WriterEntityFactory;
+use OpenSpout\Writer\XLSX\Writer;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\RichText\RichText;
@@ -28,7 +28,7 @@ final class TableWriterTest extends TestCase
 
     public function testPostGenerationDetails(): void
     {
-        $XLSXWriter  = WriterEntityFactory::createXLSXWriter();
+        $XLSXWriter  = new Writer();
         $XLSXWriter->openToFile($this->filename);
         $heading = \uniqid('Heading_');
         $table   = new Table($XLSXWriter->getCurrentSheet(), $heading, [
@@ -74,7 +74,7 @@ final class TableWriterTest extends TestCase
         $heading = \sprintf('%s: %s', \uniqid('Heading_'), $textWithSpecialCharacters);
         $data    = \sprintf('%s: %s', \uniqid('Data_'), $textWithSpecialCharacters);
 
-        $XLSXWriter  = WriterEntityFactory::createXLSXWriter();
+        $XLSXWriter  = new Writer();
         $XLSXWriter->openToFile($this->filename);
         $activeSheet = $XLSXWriter->getCurrentSheet();
         $activeSheet->setName(\uniqid());
@@ -97,7 +97,7 @@ final class TableWriterTest extends TestCase
 
     public function testCellStyles(): void
     {
-        $XLSXWriter  = WriterEntityFactory::createXLSXWriter();
+        $XLSXWriter  = new Writer();
         $XLSXWriter->openToFile($this->filename);
 
         $columnCollection = new ColumnCollection(...[
@@ -158,7 +158,7 @@ final class TableWriterTest extends TestCase
             'E3' => 1234567.89,
             'F3' => 'AABB',
             'G3' => null,
-            'H3' => '0123',
+            'H3' => 123,
             'I3' => 'disorder',
             'J3' => 'no_column',
         ];
@@ -184,7 +184,7 @@ final class TableWriterTest extends TestCase
             'E3' => DataType::TYPE_NUMERIC,
             'F3' => DataType::TYPE_INLINE,
             'G3' => DataType::TYPE_NULL,
-            'H3' => DataType::TYPE_STRING,
+            'H3' => DataType::TYPE_NUMERIC,
             'I3' => DataType::TYPE_INLINE,
             'J3' => DataType::TYPE_INLINE,
         ];
@@ -251,7 +251,7 @@ final class TableWriterTest extends TestCase
 
     public function testTablePagination(): void
     {
-        $XLSXWriter  = WriterEntityFactory::createXLSXWriter();
+        $XLSXWriter  = new Writer();
         $XLSXWriter->openToFile($this->filename);
         $worksheet = $XLSXWriter->getCurrentSheet();
         $worksheet->setName('names');
@@ -310,7 +310,7 @@ final class TableWriterTest extends TestCase
     public function testEmptyTable(): void
     {
         $emptyTableMessage = \uniqid('no_data_');
-        $XLSXWriter        = WriterEntityFactory::createXLSXWriter();
+        $XLSXWriter        = new Writer();
         $XLSXWriter->openToFile($this->filename);
 
         $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid(), []);
@@ -336,7 +336,7 @@ final class TableWriterTest extends TestCase
 
     public function testFontRowAttributesUsage(): void
     {
-        $XLSXWriter  = WriterEntityFactory::createXLSXWriter();
+        $XLSXWriter = new Writer();
         $XLSXWriter->openToFile($this->filename);
         $table  = new Table($XLSXWriter->getCurrentSheet(), \uniqid(), [
             [

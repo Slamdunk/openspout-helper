@@ -15,9 +15,9 @@ final class Date implements ContentDecoratorInterface
 {
     public const FORMATCODE = 'dd/mm/yyyy';
 
-    public function getDataType(): int
+    public function getDataType(): string
     {
-        return Cell::TYPE_DATE;
+        return Cell\DateTimeCell::class;
     }
 
     public function styleCell(Style $style): void
@@ -28,9 +28,7 @@ final class Date implements ContentDecoratorInterface
 
     public function decorate(mixed $content): mixed
     {
-        if (! \is_string($content)) {
-            return $content;
-        }
+        \assert(\is_string($content));
 
         return new DateTimeImmutable($content, new DateTimeZone('UTC'));
     }

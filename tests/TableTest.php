@@ -20,7 +20,7 @@ final class TableTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->sheetManager = new SheetManager(new StringHelper());
+        $this->sheetManager = new SheetManager(new StringHelper(false));
         $this->activeSheet  = new Sheet(1, '1', $this->sheetManager);
         $this->table        = new Table(
             $this->activeSheet,

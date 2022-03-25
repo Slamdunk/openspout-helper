@@ -8,14 +8,15 @@ use OpenSpout\Common\Entity\Cell;
 use OpenSpout\Common\Entity\Style\CellAlignment;
 use OpenSpout\Common\Entity\Style\Style;
 use Slam\OpenspoutHelper\ContentConsumerInterface;
+use Slam\OpenspoutHelper\ContentDecoratorInterface;
 
-final class PaddedInteger implements ContentConsumerInterface
+final class PaddedInteger implements ContentConsumerInterface, ContentDecoratorInterface
 {
     private int $maxLength = 0;
 
-    public function getDataType(): int
+    public function getDataType(): string
     {
-        return Cell::TYPE_NUMERIC;
+        return Cell\NumericCell::class;
     }
 
     public function styleCell(Style $style): void
@@ -29,5 +30,12 @@ final class PaddedInteger implements ContentConsumerInterface
         if (\is_string($content)) {
             $this->maxLength = \max($this->maxLength, \strlen($content));
         }
+    }
+
+    public function decorate(mixed $content): int
+    {
+        \assert(\is_string($content));
+
+        return (int) $content;
     }
 }

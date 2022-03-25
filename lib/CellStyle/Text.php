@@ -11,9 +11,9 @@ use Slam\OpenspoutHelper\CellStyleInterface;
 
 final class Text implements CellStyleInterface
 {
-    public function getDataType(): int
+    public function getDataType(): string
     {
-        return Cell::TYPE_STRING;
+        return Cell\StringCell::class;
     }
 
     public function styleCell(Style $style): void

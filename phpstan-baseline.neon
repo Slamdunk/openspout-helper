@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$columns of method OpenSpout\\\\Writer\\\\Common\\\\AbstractOptions\\:\\:setColumnWidth\\(\\) expects int\\<1, max\\>, int given\\.$#"
+			count: 1
+			path: lib/TableWriter.php
+
+		-
 			message: "#^Cannot cast mixed to string\\.$#"
 			count: 10
 			path: tests/TableWriterTest.php

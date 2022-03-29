@@ -12,7 +12,7 @@ use OpenSpout\Common\Entity\Style\Style;
 final class CellStyleSpec
 {
     public function __construct(
-        public readonly CellStyleInterface $cellStyle,
+        public readonly ?CellStyleInterface $cellStyle,
         public readonly Style $headerStyle,
         public readonly Style $zebraLightStyle,
         public readonly Style $zebraDarkStyle,

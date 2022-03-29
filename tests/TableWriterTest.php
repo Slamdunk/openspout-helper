@@ -118,16 +118,18 @@ final class TableWriterTest extends TestCase
         $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid('Heading_'), [
             [
                 'my_text' => 'text',
-                'my_perc' => 3.45,
-                'my_inte' => 1234567.8,
+                'my_perc' => '3.45',
+                'my_inte' => '1234567',
                 'my_date' => '2017-03-02',
-                'my_amnt' => 1234567.89,
+                'my_amnt' => '1234567.89',
                 'my_itfc' => 'AABB',
                 'my_nodd' => null,
                 'my_padd' => '0123',
 
-                'disorder'  => 'disorder',
-                'no_column' => 'no_column',
+                'disorder'      => 'disorder',
+                'no_column_1'   => 'no_column',
+                'no_column_2'   => null,
+                'no_column_3'   => 123,
             ],
         ]);
         $table->setColumnCollection($columnCollection);
@@ -149,11 +151,13 @@ final class TableWriterTest extends TestCase
             'G2' => 'Foo7',
             'H2' => 'Foo8',
             'I2' => 'Foo50',
-            'J2' => 'No Column',
+            'J2' => 'No Column 1',
+            'K2' => 'No Column 2',
+            'L2' => 'No Column 3',
 
             'A3' => 'text',
             'B3' => 3.45,
-            'C3' => 1234567.8,
+            'C3' => 1234567,
             'D3' => 42796,
             'E3' => 1234567.89,
             'F3' => 'AABB',
@@ -161,6 +165,8 @@ final class TableWriterTest extends TestCase
             'H3' => 123,
             'I3' => 'disorder',
             'J3' => 'no_column',
+            'K3' => null,
+            'L3' => 123,
         ];
 
         $expectedDataType = [
@@ -176,6 +182,8 @@ final class TableWriterTest extends TestCase
             'H2' => DataType::TYPE_INLINE,
             'I2' => DataType::TYPE_INLINE,
             'J2' => DataType::TYPE_INLINE,
+            'K2' => DataType::TYPE_INLINE,
+            'L2' => DataType::TYPE_INLINE,
 
             'A3' => DataType::TYPE_INLINE,
             'B3' => DataType::TYPE_NUMERIC,
@@ -187,6 +195,8 @@ final class TableWriterTest extends TestCase
             'H3' => DataType::TYPE_NUMERIC,
             'I3' => DataType::TYPE_INLINE,
             'J3' => DataType::TYPE_INLINE,
+            'K3' => DataType::TYPE_NULL,
+            'L3' => DataType::TYPE_NUMERIC,
         ];
 
         $expectedNumberFormat = [
@@ -202,6 +212,8 @@ final class TableWriterTest extends TestCase
             'H2' => NumberFormat::FORMAT_GENERAL,
             'I2' => NumberFormat::FORMAT_GENERAL,
             'J2' => NumberFormat::FORMAT_GENERAL,
+            'K2' => NumberFormat::FORMAT_GENERAL,
+            'L2' => NumberFormat::FORMAT_GENERAL,
 
             'A3' => NumberFormat::FORMAT_GENERAL,
             'B3' => CellStyle\Percentage::FORMATCODE,
@@ -213,6 +225,8 @@ final class TableWriterTest extends TestCase
             'H3' => '0000',
             'I3' => NumberFormat::FORMAT_GENERAL,
             'J3' => NumberFormat::FORMAT_GENERAL,
+            'K3' => NumberFormat::FORMAT_GENERAL,
+            'L3' => NumberFormat::FORMAT_GENERAL,
         ];
 
         $expectedWidths = [
@@ -226,6 +240,8 @@ final class TableWriterTest extends TestCase
             'H' => 18,
             'I' => 50,
             'J' => TableWriter::COLUMN_DEFAULT_WIDTH,
+            'K' => TableWriter::COLUMN_DEFAULT_WIDTH,
+            'L' => TableWriter::COLUMN_DEFAULT_WIDTH,
         ];
 
         $actualContent      = [];

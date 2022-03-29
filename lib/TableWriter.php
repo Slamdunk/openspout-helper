@@ -10,7 +10,6 @@ use OpenSpout\Common\Entity\Style\CellAlignment;
 use OpenSpout\Common\Entity\Style\Style;
 use OpenSpout\Writer\XLSX\Entity\SheetView;
 use OpenSpout\Writer\XLSX\Writer;
-use Slam\OpenspoutHelper\CellStyle\Text;
 
 final class TableWriter
 {
@@ -172,30 +171,25 @@ final class TableWriter
         $isTitle = 0 === $odd;
         $cells   = [];
         foreach ($row as $key => $content) {
-            if (null === $content) {
-                $cell = new Cell\EmptyCell($content, null);
-            } elseif (! $isTitle && isset($this->styles[$key])) {
-                $cellStyle = $this->styles[$key]->cellStyle;
-                if ($cellStyle instanceof ContentDecoratorInterface) {
-                    $content = $cellStyle->decorate($content);
-                }
-                $dataType = $cellStyle->getDataType();
-                $cell     = new $dataType($content, null);
-            } else {
-                $cell = Cell::fromValue($content);
+            if (
+                ! $isTitle
+                && null !== $content
+                && ($cellStyle = $this->styles[$key]->cellStyle) instanceof ContentDecoratorInterface
+            ) {
+                $content = $cellStyle->decorate($content);
             }
 
             $cellStyleSpec = $this->styles[$key];
-            $cell->setStyle(
-                $isTitle
+            $style         = $isTitle
                 ? $cellStyleSpec->headerStyle
                 : (
                     (1 === ($odd % 2))
                     ? $cellStyleSpec->zebraLightStyle
                     : $cellStyleSpec->zebraDarkStyle
                 )
-            );
-            $cells[] = $cell;
+            ;
+
+            $cells[] = Cell::fromValue($content, $style);
         }
 
         $writer->addRow(new Row($cells, null));
@@ -226,10 +220,12 @@ final class TableWriter
             $zebraDark->setFontSize($table->getFontSize());
             $zebraDark->setBackgroundColor(self::COLOR_ODD_FILL);
 
-            $cellStyle = ($columnCollection[$columnKey] ?? null)?->getCellStyle() ?? new Text();
+            $cellStyle = ($columnCollection[$columnKey] ?? null)?->getCellStyle();
 
-            $cellStyle->styleCell($zebraLight);
-            $cellStyle->styleCell($zebraDark);
+            if (null !== $cellStyle) {
+                $cellStyle->styleCell($zebraLight);
+                $cellStyle->styleCell($zebraDark);
+            }
 
             $this->styles[$columnKey] = new CellStyleSpec(
                 $cellStyle,

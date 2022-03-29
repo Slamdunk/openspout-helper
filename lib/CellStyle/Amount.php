@@ -18,7 +18,7 @@ final class Amount implements ContentDecoratorInterface
 
     public function decorate(string|int|float $content): float
     {
-        \assert(\is_string($content) && \is_numeric($content));
+        \assert(\is_numeric($content));
 
         return (float) $content;
     }

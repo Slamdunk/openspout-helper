@@ -20,7 +20,7 @@ final class Integer implements ContentDecoratorInterface
 
     public function decorate(string|int|float $content): int
     {
-        \assert(\is_string($content) && \is_numeric($content) && ! \str_contains($content, '.'));
+        \assert(\is_numeric($content) && ! \str_contains((string) $content, '.'));
 
         return (int) $content;
     }

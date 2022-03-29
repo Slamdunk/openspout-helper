@@ -172,30 +172,28 @@ final class TableWriter
         $isTitle = 0 === $odd;
         $cells   = [];
         foreach ($row as $key => $content) {
-            $dataType = Cell\StringCell::class;
             if (null === $content) {
-                $dataType = Cell\EmptyCell::class;
-            } elseif (
-                ! $isTitle
-                && isset($this->styles[$key])
-            ) {
+                $cell = new Cell\EmptyCell($content, null);
+            } elseif (! $isTitle && isset($this->styles[$key])) {
                 $cellStyle = $this->styles[$key]->cellStyle;
-                $dataType  = $cellStyle->getDataType();
                 if ($cellStyle instanceof ContentDecoratorInterface) {
                     $content = $cellStyle->decorate($content);
                 }
+                $dataType = $cellStyle->getDataType();
+                $cell     = new $dataType($content, null);
+            } else {
+                $cell = Cell::fromValue($content);
             }
 
             $cellStyleSpec = $this->styles[$key];
-            $cell          = new $dataType(
-                $content,
+            $cell->setStyle(
                 $isTitle
-                    ? $cellStyleSpec->headerStyle
-                    : (
-                        (1 === ($odd % 2))
-                        ? $cellStyleSpec->zebraLightStyle
-                        : $cellStyleSpec->zebraDarkStyle
-                    )
+                ? $cellStyleSpec->headerStyle
+                : (
+                    (1 === ($odd % 2))
+                    ? $cellStyleSpec->zebraLightStyle
+                    : $cellStyleSpec->zebraDarkStyle
+                )
             );
             $cells[] = $cell;
         }

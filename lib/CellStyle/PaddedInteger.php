@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Slam\OpenspoutHelper\CellStyle;
 
-use OpenSpout\Common\Entity\Cell;
 use OpenSpout\Common\Entity\Style\CellAlignment;
 use OpenSpout\Common\Entity\Style\Style;
 use Slam\OpenspoutHelper\ContentConsumerInterface;
@@ -13,11 +12,6 @@ use Slam\OpenspoutHelper\ContentDecoratorInterface;
 final class PaddedInteger implements ContentConsumerInterface, ContentDecoratorInterface
 {
     private int $maxLength = 0;
-
-    public function getDataType(): string
-    {
-        return Cell\NumericCell::class;
-    }
 
     public function styleCell(Style $style): void
     {
@@ -32,10 +26,8 @@ final class PaddedInteger implements ContentConsumerInterface, ContentDecoratorI
         }
     }
 
-    public function decorate(mixed $content): int
+    public function decorate(string|int|float $content): int
     {
-        \assert(\is_string($content));
-
-        return (int) $content;
+        return (new Integer())->decorate($content);
     }
 }

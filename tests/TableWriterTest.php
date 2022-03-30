@@ -22,7 +22,7 @@ final class TableWriterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->filename = __DIR__ . '/tmp/test.xlsx';
+        $this->filename = __DIR__ . '/tmp/test_' . (string) \getenv('TEST_TOKEN') . '.xlsx';
         @\unlink($this->filename);
     }
 

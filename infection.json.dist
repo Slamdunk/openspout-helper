@@ -9,7 +9,7 @@
     "logs": {
         "text": "infections.log",
         "stryker": {
-            "report": "master"
+            "report": "main"
         }
     },
     "mutators": {
@@ -19,6 +19,6 @@
             "\\\\assert\\(.+\\);"
         ]
     },
-    "minMsi": 76,
-    "minCoveredMsi": 76
+    "minMsi": 77,
+    "minCoveredMsi": 77
 }

@@ -122,7 +122,7 @@ final class TableWriter
         if ($table->getFreezePanes()) {
             $table->getActiveSheet()->setSheetView(
                 (new SheetView())
-                    ->setFreezeRow(3)
+                    ->setFreezeRow($table->getRowStart() + 3)
             );
         }
     }

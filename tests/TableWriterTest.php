@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Slam\OpenspoutHelper\Tests;
 
+use OpenSpout\Common\Entity\Row;
 use OpenSpout\Writer\XLSX\Writer;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
@@ -30,6 +31,7 @@ final class TableWriterTest extends TestCase
     {
         $XLSXWriter  = new Writer();
         $XLSXWriter->openToFile($this->filename);
+        $XLSXWriter->addRow(Row::fromValues([\uniqid()]));
         $heading = \uniqid('Heading_');
         $table   = new Table($XLSXWriter->getCurrentSheet(), $heading, [
             ['description' => 'AAA'],
@@ -39,10 +41,10 @@ final class TableWriterTest extends TestCase
         (new TableWriter())->writeTable($XLSXWriter, $table);
         $XLSXWriter->close();
 
-        self::assertSame(0, $table->getRowStart());
-        self::assertSame(3, $table->getRowEnd());
+        self::assertSame(1, $table->getRowStart());
+        self::assertSame(4, $table->getRowEnd());
 
-        self::assertSame(2, $table->getDataRowStart());
+        self::assertSame(3, $table->getDataRowStart());
 
         self::assertSame(0, $table->getColumnStart());
         self::assertSame(0, $table->getColumnEnd());
@@ -52,10 +54,11 @@ final class TableWriterTest extends TestCase
 
         $sheet = (new Xlsx())->load($this->filename)->getActiveSheet();
 
-        self::assertSame($heading, (string) $sheet->getCellByColumnAndRow(1, 1)->getValue());
-        self::assertSame('Description', (string) $sheet->getCellByColumnAndRow(1, 2)->getValue());
-        self::assertSame('AAA', (string) $sheet->getCellByColumnAndRow(1, 3)->getValue());
-        self::assertSame('BBB', (string) $sheet->getCellByColumnAndRow(1, 4)->getValue());
+        self::assertSame($heading, (string) $sheet->getCellByColumnAndRow(1, 2)->getValue());
+        self::assertSame('Description', (string) $sheet->getCellByColumnAndRow(1, 3)->getValue());
+        self::assertSame('AAA', (string) $sheet->getCellByColumnAndRow(1, 4)->getValue());
+        self::assertSame('BBB', (string) $sheet->getCellByColumnAndRow(1, 5)->getValue());
+        self::assertSame('A4', $sheet->getFreezePane());
     }
 
     public function testHandleEncoding(): void

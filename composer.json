@@ -11,13 +11,13 @@
     ],
     "require": {
         "php": "~8.1.0",
-        "openspout/openspout": "^4.2.0"
+        "openspout/openspout": "^4.4.1"
     },
     "require-dev": {
         "infection/infection": "^0.26.6",
         "malukenho/mcbumpface": "^1.1.5",
         "phpoffice/phpspreadsheet": "^1.22.0",
-        "phpstan/phpstan": "^1.5.2",
+        "phpstan/phpstan": "^1.5.3",
         "phpstan/phpstan-phpunit": "^1.1.0",
         "phpunit/phpunit": "^9.5.19",
         "slam/php-cs-fixer-extensions": "^3.1.0"

@@ -10,13 +10,42 @@ use OpenSpout\Writer\Common\Entity\Sheet;
 final class Table implements Countable
 {
     private Sheet $activeSheet;
-    private int $rowStart      = 0;
+
+    /**
+     * @var 0|positive-int
+     */
+    private int $rowEnd;
+
+    /**
+     * @var 0|positive-int
+     */
+    private int $rowCurrent;
+
+    /**
+     * @var 0|positive-int
+     */
+    private int $rowStart;
+
+    /**
+     * @var null|0|positive-int
+     */
     private ?int $dataRowStart = null;
-    private int $rowEnd        = 0;
-    private int $rowCurrent    = 0;
+
+    /**
+     * @var 0|positive-int
+     */
     private int $columnStart   = 0;
+
+    /**
+     * @var 0|positive-int
+     */
     private int $columnEnd     = 0;
+
+    /**
+     * @var 0|positive-int
+     */
     private int $columnCurrent = 0;
+
     private string $heading;
 
     /**
@@ -45,6 +74,10 @@ final class Table implements Countable
         $this->data        = $data;
 
         $this->columnCollection = new ColumnCollection();
+
+        $this->rowStart   =
+        $this->rowEnd     =
+        $this->rowCurrent = $activeSheet->getWrittenRowCount();
     }
 
     public function getActiveSheet(): Sheet
@@ -52,6 +85,9 @@ final class Table implements Countable
         return $this->activeSheet;
     }
 
+    /**
+     * @return 0|positive-int
+     */
     public function getDataRowStart(): int
     {
         \assert(null !== $this->dataRowStart);
@@ -64,16 +100,25 @@ final class Table implements Countable
         $this->dataRowStart = $this->rowCurrent;
     }
 
+    /**
+     * @return 0|positive-int
+     */
     public function getRowStart(): int
     {
         return $this->rowStart;
     }
 
+    /**
+     * @return 0|positive-int
+     */
     public function getRowEnd(): int
     {
         return $this->rowEnd;
     }
 
+    /**
+     * @return 0|positive-int
+     */
     public function getRowCurrent(): int
     {
         return $this->rowCurrent;
@@ -85,11 +130,17 @@ final class Table implements Countable
         ++$this->rowCurrent;
     }
 
+    /**
+     * @return 0|positive-int
+     */
     public function getColumnStart(): int
     {
         return $this->columnStart;
     }
 
+    /**
+     * @return 0|positive-int
+     */
     public function getColumnEnd(): int
     {
         return $this->columnEnd;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Slam\OpenspoutHelper;
 
 use Countable;
+use OpenSpout\Writer\AutoFilter;
 use OpenSpout\Writer\Common\Entity\Sheet;
 
 final class Table implements Countable
@@ -261,5 +262,18 @@ final class Table implements Countable
         $newTable->setFreezePanes($this->getFreezePanes());
 
         return $newTable;
+    }
+
+    public function enableAutoFilter(): void
+    {
+        if (! $this->isEmpty() && $this->getDataRowStart() > 0) {
+            $minCol = $this->getColumnStart();
+            $minRow = $this->getDataRowStart() - 1; // header row
+            $maxCol = $this->getColumnEnd();
+            $maxRow = $this->getRowEnd();
+
+            $autoFilter = new AutoFilter($minCol, $minRow + 1, $maxCol, $maxRow + 1);
+            $this->activeSheet->setAutoFilter($autoFilter);
+        }
     }
 }

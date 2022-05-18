@@ -442,4 +442,21 @@ final class TableWriterTest extends TestCase
         self::assertSame(1, $autoFilter->toColumnIndex);
         self::assertSame(4, $autoFilter->toRow);
     }
+
+    public function testEmptyTableHasNoAutofilter(): void
+    {
+        $emptyTableMessage = \uniqid('no_data_');
+        $XLSXWriter        = new Writer();
+        $XLSXWriter->openToFile($this->filename);
+
+        $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid(), []);
+
+        (new TableWriter($emptyTableMessage))->writeTable($XLSXWriter, $table);
+        $XLSXWriter->close();
+
+        $table->enableAutoFilter();
+
+        $autoFilter = $table->getActiveSheet()->getAutoFilter();
+        self::assertNull($autoFilter);
+    }
 }

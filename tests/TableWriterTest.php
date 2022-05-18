@@ -413,4 +413,50 @@ final class TableWriterTest extends TestCase
         // self::assertSame(33, (int) $firstSheet->getRowDimension($cell->getRow())->getRowHeight());
         self::assertTrue($style->getAlignment()->getWrapText());
     }
+
+    public function testTableWithAutofilter(): void
+    {
+        $XLSXWriter = new Writer();
+        $XLSXWriter->openToFile($this->filename);
+        $table  = new Table($XLSXWriter->getCurrentSheet(), \uniqid(), [
+            [
+                'name'    => 'Foo',
+                'surname' => 'Bar',
+            ],
+            [
+                'name'    => 'Baz',
+                'surname' => 'Xxx',
+            ],
+        ]);
+
+        (new TableWriter())->writeTable($XLSXWriter, $table);
+        $XLSXWriter->close();
+
+        $table->enableAutoFilter();
+
+        $autoFilter = $table->getActiveSheet()->getAutoFilter();
+        self::assertNotNull($autoFilter);
+
+        self::assertSame(0, $autoFilter->fromColumnIndex);
+        self::assertSame(2, $autoFilter->fromRow);
+        self::assertSame(1, $autoFilter->toColumnIndex);
+        self::assertSame(4, $autoFilter->toRow);
+    }
+
+    public function testEmptyTableHasNoAutofilter(): void
+    {
+        $emptyTableMessage = \uniqid('no_data_');
+        $XLSXWriter        = new Writer();
+        $XLSXWriter->openToFile($this->filename);
+
+        $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid(), []);
+
+        (new TableWriter($emptyTableMessage))->writeTable($XLSXWriter, $table);
+        $XLSXWriter->close();
+
+        $table->enableAutoFilter();
+
+        $autoFilter = $table->getActiveSheet()->getAutoFilter();
+        self::assertNull($autoFilter);
+    }
 }

@@ -1,8 +1,18 @@
+
+SRCS := $(shell find ./lib ./tests -type f -not -path "*/tmp/*")
+
+LOCAL_BASE_BRANCH ?= $(shell git show-branch | sed "s/].*//" | grep "\*" | grep -v "$$(git rev-parse --abbrev-ref HEAD)" | head -n1 | sed "s/^.*\[//")
+ifeq ($(strip $(LOCAL_BASE_BRANCH)),)
+	LOCAL_BASE_BRANCH := HEAD^
+endif
+BASE_BRANCH ?= $(LOCAL_BASE_BRANCH)
+
 all: csfix static-analysis code-coverage
 	@echo "Done."
 
 vendor: composer.json
 	composer update
+	composer bump
 	touch vendor
 
 .PHONY: csfix
@@ -11,19 +21,29 @@ csfix: vendor
 
 .PHONY: static-analysis
 static-analysis: vendor
-	vendor/bin/phpstan analyse
+	php -d zend.assertions=1 vendor/bin/phpstan analyse
 
-.PHONY: test
-test: vendor
+coverage/junit.xml: vendor $(SRCS) Makefile
 	php -d zend.assertions=1 vendor/bin/phpunit \
 		--coverage-xml=coverage/coverage-xml \
 		--coverage-html=coverage/html \
 		--log-junit=coverage/junit.xml \
-		${arg}
+		$(PHPUNIT_ARGS)
+
+.PHONY: test
+test: coverage/junit.xml
 
 .PHONY: code-coverage
-code-coverage: test
-	php -d zend.assertions=1 vendor/bin/infection \
+code-coverage: coverage/junit.xml
+	echo "Base branch: $(BASE_BRANCH)"
+	php -d zend.assertions=1 \
+		vendor/bin/infection \
 		--threads=$(shell nproc) \
+		--git-diff-lines \
+		--git-diff-base=$(BASE_BRANCH) \
+		--skip-initial-tests \
 		--coverage=coverage \
-		--skip-initial-tests
+		--show-mutations \
+		--verbose \
+		--min-msi=100 \
+		$(INFECTION_ARGS)

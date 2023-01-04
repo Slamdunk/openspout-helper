@@ -3,7 +3,6 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/slam/openspout-helper.svg)](https://packagist.org/packages/slam/openspout-helper)
 [![Downloads](https://img.shields.io/packagist/dt/slam/openspout-helper.svg)](https://packagist.org/packages/slam/openspout-helper)
 [![CI](https://github.com/Slamdunk/openspout-helper/actions/workflows/ci.yaml/badge.svg)](https://github.com/Slamdunk/openspout-helper/actions/workflows/ci.yaml)
-[![Code Coverage](https://codecov.io/gh/Slamdunk/openspout-helper/coverage.svg?branch=main)](https://codecov.io/gh/Slamdunk/openspout-helper?branch=main)
 [![Infection MSI](https://badge.stryker-mutator.io/github.com/Slamdunk/openspout-helper/main)](https://dashboard.stryker-mutator.io/reports/github.com/Slamdunk/openspout-helper/main)
 
 ## Installation

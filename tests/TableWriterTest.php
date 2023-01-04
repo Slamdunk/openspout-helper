@@ -124,23 +124,23 @@ final class TableWriterTest extends TestCase
 
         $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid('Heading_'), [
             [
-                'my_text' => 'text',
-                'my_perc' => '3.45',
-                'my_inte' => '1234567',
-                'my_date' => '2017-03-02',
-                'my_amnt' => '1234567.89',
-                'my_itfc' => 'AABB',
-                'my_nodd' => null,
-                'my_padd' => '0123',
+                'my_text'       => 'text',
+                'my_perc'       => '3.45',
+                'my_inte'       => '1234567',
+                'my_date'       => '2017-03-02',
+                'my_amnt'       => '1234567.89',
+                'my_itfc'       => 'AABB',
+                'my_nodd'       => null,
+                'my_padd'       => '0123',
 
                 'disorder'      => 'disorder',
                 'no_column_1'   => 'no_column',
                 'no_column_2'   => null,
                 'no_column_3'   => 123,
 
-                'natural_perc' => 3.45,
-                'natural_inte' => 1234567,
-                'natural_amnt' => 1234567.89,
+                'natural_perc'  => 3.45,
+                'natural_inte'  => 1234567,
+                'natural_amnt'  => 1234567.89,
             ],
         ]);
         $table->setColumnCollection($columnCollection);

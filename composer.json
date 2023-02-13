@@ -18,7 +18,7 @@
         "phpoffice/phpspreadsheet": "^1.26.0",
         "phpstan/phpstan": "^1.9.6",
         "phpstan/phpstan-phpunit": "^1.3.3",
-        "phpunit/phpunit": "^9.5.27",
+        "phpunit/phpunit": "^10.0.7",
         "slam/php-cs-fixer-extensions": "^3.3"
     },
     "autoload": {

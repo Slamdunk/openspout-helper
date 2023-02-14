@@ -54,7 +54,7 @@ jobs:
           ini-values: "${{ env.INI_VALUES }}"
       - uses: "ramsey/composer-install@v2"
 
-      - run: "make test"
+      - run: "make test PHP_BIN='php'"
         timeout-minutes: 3
 
       - name: "Gather base branch for diff"

@@ -54,7 +54,12 @@ jobs:
           ini-values: "${{ env.INI_VALUES }}"
       - uses: "ramsey/composer-install@v2"
 
-      - run: "make test PHP_BIN='php'"
+      - run: "vendor/bin/phpunit --no-coverage --no-logging"
+        if: ${{ matrix.code-coverage == 'none' }}
+        timeout-minutes: 3
+
+      - run: "vendor/bin/phpunit"
+        if: ${{ matrix.code-coverage != 'none' }}
         timeout-minutes: 3
 
       - name: "Gather base branch for diff"
@@ -64,7 +69,7 @@ jobs:
       - name: "Infection on DIFF"
         if: ${{ github.event_name == 'pull_request' && matrix.code-coverage != 'none' }}
         timeout-minutes: 10
-        run: make code-coverage INFECTION_ARGS="--logger-github"
+        run: "make code-coverage PHP_BIN='php' INFECTION_ARGS='--logger-github'"
         env:
           BASE_BRANCH: origin/${{ github.base_ref }}
           INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}

@@ -1,3 +1,6 @@
+CSFIX_PHP_BIN=PHP_CS_FIXER_IGNORE_ENV=1 php8.2
+PHP_BIN=php8.2 -d zend.assertions=1
+COMPOSER_BIN=$(shell command -v composer)
 
 SRCS := $(shell find ./lib ./tests -type f -not -path "*/tmp/*")
 
@@ -11,20 +14,20 @@ all: csfix static-analysis code-coverage
 	@echo "Done."
 
 vendor: composer.json
-	composer update
-	composer bump
+	$(PHP_BIN) $(COMPOSER_BIN) update
+	$(PHP_BIN) $(COMPOSER_BIN) bump
 	touch vendor
 
 .PHONY: csfix
 csfix: vendor
-	vendor/bin/php-cs-fixer fix --verbose
+	$(CSFIX_PHP_BIN) vendor/bin/php-cs-fixer fix -v $(arg)
 
 .PHONY: static-analysis
 static-analysis: vendor
-	php -d zend.assertions=1 vendor/bin/phpstan analyse
+	$(PHP_BIN) vendor/bin/phpstan analyse $(PHPSTAN_ARGS)
 
 coverage/junit.xml: vendor $(SRCS) Makefile
-	php -d zend.assertions=1 vendor/bin/phpunit \
+	$(PHP_BIN) vendor/bin/phpunit \
 		--coverage-xml=coverage/coverage-xml \
 		--coverage-html=coverage/html \
 		--log-junit=coverage/junit.xml \
@@ -36,7 +39,7 @@ test: coverage/junit.xml
 .PHONY: code-coverage
 code-coverage: coverage/junit.xml
 	echo "Base branch: $(BASE_BRANCH)"
-	php -d zend.assertions=1 \
+	$(PHP_BIN) \
 		vendor/bin/infection \
 		--threads=$(shell nproc) \
 		--git-diff-lines \

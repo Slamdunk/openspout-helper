@@ -27,11 +27,7 @@ static-analysis: vendor
 	$(PHP_BIN) vendor/bin/phpstan analyse $(PHPSTAN_ARGS)
 
 coverage/junit.xml: vendor $(SRCS) Makefile
-	$(PHP_BIN) vendor/bin/phpunit \
-		--coverage-xml=coverage/coverage-xml \
-		--coverage-html=coverage/html \
-		--log-junit=coverage/junit.xml \
-		$(PHPUNIT_ARGS)
+	$(PHP_BIN) vendor/bin/phpunit $(PHPUNIT_ARGS)
 
 .PHONY: test
 test: coverage/junit.xml

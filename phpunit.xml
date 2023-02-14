@@ -11,9 +11,14 @@
       <directory suffix=".php">./lib</directory>
     </include>
     <report>
+      <html outputDirectory="coverage/html"/>
+      <xml outputDirectory="coverage/coverage-xml"/>
       <text outputFile="php://stdout" showOnlySummary="true"/>
     </report>
   </coverage>
+  <logging>
+    <junit outputFile="coverage/junit.xml"/>
+  </logging>
   <testsuite name="Excel">
     <directory>./tests</directory>
   </testsuite>

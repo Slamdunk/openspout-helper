@@ -1,4 +1,4 @@
-# Slam PhpSpreadsheet helper to create organized data table
+# Slam Openspout helper to create organized data table
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/slam/openspout-helper.svg)](https://packagist.org/packages/slam/openspout-helper)
 [![Downloads](https://img.shields.io/packagist/dt/slam/openspout-helper.svg)](https://packagist.org/packages/slam/openspout-helper)

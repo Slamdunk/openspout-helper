@@ -11,8 +11,7 @@ final class Column implements ColumnInterface
         private string $heading,
         private int $width,
         private CellStyleInterface $cellStyle
-    ) {
-    }
+    ) {}
 
     public function getKey(): string
     {

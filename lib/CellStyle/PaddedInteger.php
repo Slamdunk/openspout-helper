@@ -26,7 +26,7 @@ final class PaddedInteger implements ContentConsumerInterface, ContentDecoratorI
         }
     }
 
-    public function decorate(string|int|float $content): int
+    public function decorate(float|int|string $content): int
     {
         return (new Integer())->decorate($content);
     }

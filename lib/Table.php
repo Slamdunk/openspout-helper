@@ -12,46 +12,30 @@ final class Table implements Countable
 {
     private Sheet $activeSheet;
 
-    /**
-     * @var 0|positive-int
-     */
+    /** @var 0|positive-int */
     private int $rowEnd;
 
-    /**
-     * @var 0|positive-int
-     */
+    /** @var 0|positive-int */
     private int $rowCurrent;
 
-    /**
-     * @var 0|positive-int
-     */
+    /** @var 0|positive-int */
     private int $rowStart;
 
-    /**
-     * @var null|0|positive-int
-     */
+    /** @var null|0|positive-int */
     private ?int $dataRowStart = null;
 
-    /**
-     * @var 0|positive-int
-     */
+    /** @var 0|positive-int */
     private int $columnStart   = 0;
 
-    /**
-     * @var 0|positive-int
-     */
+    /** @var 0|positive-int */
     private int $columnEnd     = 0;
 
-    /**
-     * @var 0|positive-int
-     */
+    /** @var 0|positive-int */
     private int $columnCurrent = 0;
 
     private string $heading;
 
-    /**
-     * @var iterable<int, array<string, null|float|int|string>>
-     */
+    /** @var iterable<int, array<string, null|float|int|string>> */
     private iterable $data;
     private ColumnCollection $columnCollection;
     private bool $freezePanes = true;
@@ -59,15 +43,11 @@ final class Table implements Countable
     private ?int $rowHeight   = null;
     private bool $textWrap    = false;
 
-    /**
-     * @var array<int, string>
-     */
+    /** @var array<int, string> */
     private array $writtenColumn       = [];
     private ?int $count                = null;
 
-    /**
-     * @param iterable<int, array<string, null|float|int|string>> $data
-     */
+    /** @param iterable<int, array<string, null|float|int|string>> $data */
     public function __construct(Sheet $activeSheet, string $heading, iterable $data)
     {
         $this->activeSheet = $activeSheet;
@@ -86,9 +66,7 @@ final class Table implements Countable
         return $this->activeSheet;
     }
 
-    /**
-     * @return 0|positive-int
-     */
+    /** @return 0|positive-int */
     public function getDataRowStart(): int
     {
         \assert(null !== $this->dataRowStart);
@@ -101,25 +79,19 @@ final class Table implements Countable
         $this->dataRowStart = $this->rowCurrent;
     }
 
-    /**
-     * @return 0|positive-int
-     */
+    /** @return 0|positive-int */
     public function getRowStart(): int
     {
         return $this->rowStart;
     }
 
-    /**
-     * @return 0|positive-int
-     */
+    /** @return 0|positive-int */
     public function getRowEnd(): int
     {
         return $this->rowEnd;
     }
 
-    /**
-     * @return 0|positive-int
-     */
+    /** @return 0|positive-int */
     public function getRowCurrent(): int
     {
         return $this->rowCurrent;
@@ -131,17 +103,13 @@ final class Table implements Countable
         ++$this->rowCurrent;
     }
 
-    /**
-     * @return 0|positive-int
-     */
+    /** @return 0|positive-int */
     public function getColumnStart(): int
     {
         return $this->columnStart;
     }
 
-    /**
-     * @return 0|positive-int
-     */
+    /** @return 0|positive-int */
     public function getColumnEnd(): int
     {
         return $this->columnEnd;
@@ -158,9 +126,7 @@ final class Table implements Countable
         return $this->heading;
     }
 
-    /**
-     * @return iterable<int, array<string, null|float|int|string>>
-     */
+    /** @return iterable<int, array<string, null|float|int|string>> */
     public function getData(): iterable
     {
         return $this->data;
@@ -216,17 +182,13 @@ final class Table implements Countable
         return $this->textWrap;
     }
 
-    /**
-     * @param array<int, string> $writtenColumn
-     */
+    /** @param array<int, string> $writtenColumn */
     public function setWrittenColumn(array $writtenColumn): void
     {
         $this->writtenColumn = $writtenColumn;
     }
 
-    /**
-     * @return array<int, string>
-     */
+    /** @return array<int, string> */
     public function getWrittenColumn(): array
     {
         return $this->writtenColumn;

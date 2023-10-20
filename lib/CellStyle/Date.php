@@ -20,7 +20,7 @@ final class Date implements ContentDecoratorInterface
         $style->setFormat(self::FORMATCODE);
     }
 
-    public function decorate(string|int|float $content): DateTimeImmutable
+    public function decorate(float|int|string $content): DateTimeImmutable
     {
         \assert(\is_string($content));
 

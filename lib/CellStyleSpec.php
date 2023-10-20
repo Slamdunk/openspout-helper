@@ -16,6 +16,5 @@ final class CellStyleSpec
         public readonly Style $headerStyle,
         public readonly Style $zebraLightStyle,
         public readonly Style $zebraDarkStyle,
-    ) {
-    }
+    ) {}
 }

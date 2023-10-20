@@ -16,7 +16,7 @@ final class Amount implements ContentDecoratorInterface
         $style->setFormat(self::FORMATCODE);
     }
 
-    public function decorate(string|int|float $content): float
+    public function decorate(float|int|string $content): float
     {
         \assert(\is_numeric($content));
 

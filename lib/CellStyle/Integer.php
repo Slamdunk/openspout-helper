@@ -18,7 +18,7 @@ final class Integer implements ContentDecoratorInterface
         $style->setFormat(self::FORMATCODE);
     }
 
-    public function decorate(string|int|float $content): int
+    public function decorate(float|int|string $content): int
     {
         \assert(\is_numeric($content) && ! \str_contains((string) $content, '.'));
 

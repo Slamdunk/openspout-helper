@@ -6,6 +6,4 @@ namespace Slam\OpenspoutHelper;
 
 use Exception as PhpException;
 
-final class Exception extends PhpException
-{
-}
+final class Exception extends PhpException {}

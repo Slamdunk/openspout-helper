@@ -284,8 +284,7 @@ final class TableWriterTest extends TestCase
             $cell                            = $firstSheet->getCell($coordinate);
             $actualContent[$coordinate]      = (($value = $cell->getValue()) instanceof RichText)
                 ? (string) $value
-                : $value
-            ;
+                : $value;
             $actualDataType[$coordinate]     = $cell->getDataType();
             $actualNumberFormat[$coordinate] = $cell->getStyle()->getNumberFormat()->getFormatCode();
             $actualWidths[$coordinate[0]]    = (int) $firstSheet->getColumnDimension($coordinate[0])->getWidth();

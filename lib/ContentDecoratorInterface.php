@@ -8,5 +8,5 @@ use DateTimeImmutable;
 
 interface ContentDecoratorInterface extends CellStyleInterface
 {
-    public function decorate(string|int|float $content): null|string|int|float|DateTimeImmutable;
+    public function decorate(float|int|string $content): null|DateTimeImmutable|float|int|string;
 }

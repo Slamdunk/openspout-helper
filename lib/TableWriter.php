@@ -19,20 +19,15 @@ final class TableWriter
 
     public const COLUMN_DEFAULT_WIDTH = 10;
 
-    /**
-     * @var array<string, CellStyleSpec>
-     */
+    /** @var array<string, CellStyleSpec> */
     private array $styles;
 
     public function __construct(
         private string $emptyTableMessage = '',
         private int $rowsPerSheet = 262144
-    ) {
-    }
+    ) {}
 
-    /**
-     * @return Table[]
-     */
+    /** @return Table[] */
     public function writeTable(Writer $writer, Table $table): array
     {
         $defaultStyle = new Style();
@@ -102,9 +97,7 @@ final class TableWriter
         return $tables;
     }
 
-    /**
-     * @param string[] $columnKeys
-     */
+    /** @param string[] $columnKeys */
     private function writeTableProperties(Writer $writer, Table $table, array $columnKeys): void
     {
         $this->generateStyles($table, $columnKeys);
@@ -139,9 +132,7 @@ final class TableWriter
         $table->incrementRow();
     }
 
-    /**
-     * @param string[] $columnKeys
-     */
+    /** @param string[] $columnKeys */
     private function writeColumnsHeading(Writer $writer, Table $table, array $columnKeys): void
     {
         $columnCollection = $table->getColumnCollection();
@@ -163,9 +154,7 @@ final class TableWriter
         $table->flagDataRowStart();
     }
 
-    /**
-     * @param array<string, null|float|int|string> $row
-     */
+    /** @param array<string, null|float|int|string> $row */
     private function writeRow(Writer $writer, Table $table, array $row, int $odd): void
     {
         $isTitle = 0 === $odd;
@@ -186,8 +175,7 @@ final class TableWriter
                     (1 === ($odd % 2))
                     ? $cellStyleSpec->zebraLightStyle
                     : $cellStyleSpec->zebraDarkStyle
-                )
-            ;
+                );
 
             $cells[] = Cell::fromValue($content, $style);
         }
@@ -197,9 +185,7 @@ final class TableWriter
         $table->incrementRow();
     }
 
-    /**
-     * @param string[] $columnKeys
-     */
+    /** @param string[] $columnKeys */
     private function generateStyles(Table $table, array $columnKeys): void
     {
         $columnCollection = $table->getColumnCollection();
@@ -236,9 +222,7 @@ final class TableWriter
         }
     }
 
-    /**
-     * @param array<string, null|float|int|string> $row
-     */
+    /** @param array<string, null|float|int|string> $row */
     private function consumeFirstRow(Table $table, array $row): void
     {
         foreach ($table->getColumnCollection() as $column) {

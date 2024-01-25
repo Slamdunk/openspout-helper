@@ -54,10 +54,10 @@ final class TableWriterTest extends TestCase
 
         $sheet = (new Xlsx())->load($this->filename)->getActiveSheet();
 
-        self::assertSame($heading, (string) $sheet->getCellByColumnAndRow(1, 2)->getValue());
-        self::assertSame('Description', (string) $sheet->getCellByColumnAndRow(1, 3)->getValue());
-        self::assertSame('AAA', (string) $sheet->getCellByColumnAndRow(1, 4)->getValue());
-        self::assertSame('BBB', (string) $sheet->getCellByColumnAndRow(1, 5)->getValue());
+        self::assertSame($heading, (string) $sheet->getCell([1, 2])->getValue());
+        self::assertSame('Description', (string) $sheet->getCell([1, 3])->getValue());
+        self::assertSame('AAA', (string) $sheet->getCell([1, 4])->getValue());
+        self::assertSame('BBB', (string) $sheet->getCell([1, 5])->getValue());
         self::assertSame('A4', $sheet->getFreezePane());
     }
 

@@ -12,7 +12,7 @@
     ],
     "require": {
         "php": "~8.2.0 || ~8.3.0",
-        "openspout/openspout": "^4.24.1"
+        "openspout/openspout": "^4.24.2"
     },
     "require-dev": {
         "infection/infection": "^0.29.5",
@@ -20,7 +20,7 @@
         "phpstan/phpstan": "^1.11.4",
         "phpstan/phpstan-phpunit": "^1.4.0",
         "phpunit/phpunit": "^11.2.2",
-        "slam/php-cs-fixer-extensions": "^3.10"
+        "slam/php-cs-fixer-extensions": "^3.11.1"
     },
     "autoload": {
         "psr-4": {

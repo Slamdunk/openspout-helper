@@ -72,7 +72,7 @@ final class TableWriterTest extends TestCase
             'GIÀ XXXXXXX YYYYYYYYYYY',
             'FINANZIAMENTO 13/14¬ MENSILITà',
 
-            'A \'\\|!"£$%&/()=?^àèìòùáéíóúÀÈÌÒÙÁÉÍÓÚ<>*ç°§[]@#{},.-;:_~` Z',
+            'A \'\|!"£$%&/()=?^àèìòùáéíóúÀÈÌÒÙÁÉÍÓÚ<>*ç°§[]@#{},.-;:_~` Z',
         ]);
         $heading = \sprintf('%s: %s', \uniqid('Heading_'), $textWithSpecialCharacters);
         $data    = \sprintf('%s: %s', \uniqid('Data_'), $textWithSpecialCharacters);

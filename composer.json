@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": "~8.2.0 || ~8.3.0",
+        "php": "~8.3.0 || ~8.4.0",
         "openspout/openspout": "^4.26.0"
     },
     "require-dev": {
@@ -20,7 +20,7 @@
         "phpstan/phpstan": "^1.12.4",
         "phpstan/phpstan-phpunit": "^1.4.0",
         "phpunit/phpunit": "^11.3.6",
-        "slam/php-cs-fixer-extensions": "^3.11.1"
+        "slam/php-cs-fixer-extensions": "^3.12.0"
     },
     "autoload": {
         "psr-4": {

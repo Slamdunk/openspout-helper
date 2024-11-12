@@ -97,7 +97,7 @@ final class TableWriter
         return $tables;
     }
 
-    /** @param string[] $columnKeys */
+    /** @param array<int, string> $columnKeys */
     private function writeTableProperties(Writer $writer, Table $table, array $columnKeys): void
     {
         $this->generateStyles($table, $columnKeys);
@@ -132,7 +132,7 @@ final class TableWriter
         $table->incrementRow();
     }
 
-    /** @param string[] $columnKeys */
+    /** @param array<int, string> $columnKeys */
     private function writeColumnsHeading(Writer $writer, Table $table, array $columnKeys): void
     {
         $columnCollection = $table->getColumnCollection();

@@ -1,6 +1,9 @@
-CSFIX_PHP_BIN=PHP_CS_FIXER_IGNORE_ENV=1 php8.2
-PHP_BIN=php8.2 -d zend.assertions=1
-COMPOSER_BIN=$(shell command -v composer)
+ifdef CI
+	DOCKER_PHP_EXEC :=
+else
+	DOCKER_PHP_EXEC := docker compose run --rm php
+endif
+PHP_BIN=php -d zend.assertions=1
 
 SRCS := $(shell find ./lib ./tests -type f -not -path "*/tmp/*")
 
@@ -13,21 +16,25 @@ BASE_BRANCH ?= $(LOCAL_BASE_BRANCH)
 all: csfix static-analysis code-coverage
 	@echo "Done."
 
-vendor: composer.json
-	$(PHP_BIN) $(COMPOSER_BIN) update
-	$(PHP_BIN) $(COMPOSER_BIN) bump
-	touch vendor
+.env: /etc/passwd /etc/group Makefile
+	printf "USER_ID=%s\nGROUP_ID=%s\n" `id --user "${USER}"` `id --group "${USER}"` > .env
+
+vendor: .env docker-compose.yml Dockerfile composer.json
+	docker compose build --pull
+	$(DOCKER_PHP_EXEC) composer update
+	$(DOCKER_PHP_EXEC) composer bump
+	touch --no-create $@
 
 .PHONY: csfix
 csfix: vendor
-	$(CSFIX_PHP_BIN) vendor/bin/php-cs-fixer fix -v $(arg)
+	$(DOCKER_PHP_EXEC) vendor/bin/php-cs-fixer fix -v
 
 .PHONY: static-analysis
 static-analysis: vendor
-	$(PHP_BIN) vendor/bin/phpstan analyse $(PHPSTAN_ARGS)
+	$(DOCKER_PHP_EXEC) $(PHP_BIN) vendor/bin/phpstan analyse --memory-limit=512M $(PHPSTAN_ARGS)
 
 coverage/junit.xml: vendor $(SRCS) Makefile
-	$(PHP_BIN) vendor/bin/phpunit $(PHPUNIT_ARGS)
+	$(DOCKER_PHP_EXEC) $(PHP_BIN) vendor/bin/phpunit $(PHPUNIT_ARGS)
 
 .PHONY: test
 test: coverage/junit.xml
@@ -35,7 +42,7 @@ test: coverage/junit.xml
 .PHONY: code-coverage
 code-coverage: coverage/junit.xml
 	echo "Base branch: $(BASE_BRANCH)"
-	$(PHP_BIN) \
+	$(DOCKER_PHP_EXEC) $(PHP_BIN) \
 		vendor/bin/infection \
 		--threads=$(shell nproc) \
 		--git-diff-lines \

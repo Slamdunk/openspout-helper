@@ -45,6 +45,8 @@ final class Table implements Countable
 
     /** @var array<int, string> */
     private array $writtenColumn       = [];
+
+    /** @var 0|positive-int */
     private ?int $count                = null;
 
     /** @param iterable<int, array<string, null|float|int|string>> $data */
@@ -194,6 +196,7 @@ final class Table implements Countable
         return $this->writtenColumn;
     }
 
+    /** @param 0|positive-int $count */
     public function setCount(int $count): void
     {
         $this->count = $count;

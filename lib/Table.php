@@ -58,9 +58,9 @@ final class Table implements Countable
 
         $this->columnCollection = new ColumnCollection();
 
-        $this->rowStart   =
-        $this->rowEnd     =
-        $this->rowCurrent = $activeSheet->getWrittenRowCount();
+        $this->rowStart
+        = $this->rowEnd
+        = $this->rowCurrent = $activeSheet->getWrittenRowCount();
     }
 
     public function getActiveSheet(): Sheet

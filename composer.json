@@ -17,7 +17,7 @@
     "require-dev": {
         "infection/infection": "^0.31.1",
         "phpoffice/phpspreadsheet": "^4.5.0",
-        "phpstan/phpstan": "^2.1.21",
+        "phpstan/phpstan": "^2.1.22",
         "phpstan/phpstan-phpunit": "^2.0.7",
         "phpunit/phpunit": "^12.3.0",
         "slam/php-cs-fixer-extensions": "^3.12.0"

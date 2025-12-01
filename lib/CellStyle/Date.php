@@ -12,12 +12,14 @@ use Slam\OpenspoutHelper\ContentDecoratorInterface;
 
 final class Date implements ContentDecoratorInterface
 {
-    public const FORMATCODE = 'dd/mm/yyyy';
+    public const string FORMATCODE = 'dd/mm/yyyy';
 
-    public function styleCell(Style $style): void
+    public function styleCell(Style $style): Style
     {
-        $style->setCellAlignment(CellAlignment::CENTER);
-        $style->setFormat(self::FORMATCODE);
+        return $style
+            ->withCellAlignment(CellAlignment::CENTER)
+            ->withFormat(self::FORMATCODE)
+        ;
     }
 
     public function decorate(float|int|string $content): DateTimeImmutable

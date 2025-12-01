@@ -13,10 +13,12 @@ final class PaddedInteger implements ContentConsumerInterface, ContentDecoratorI
 {
     private int $maxLength = 0;
 
-    public function styleCell(Style $style): void
+    public function styleCell(Style $style): Style
     {
-        $style->setCellAlignment(CellAlignment::CENTER);
-        $style->setFormat(\str_repeat('0', $this->maxLength));
+        return $style
+            ->withCellAlignment(CellAlignment::CENTER)
+            ->withFormat(\str_repeat('0', $this->maxLength))
+        ;
     }
 
     public function consume(mixed $content): void

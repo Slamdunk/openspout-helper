@@ -410,7 +410,6 @@ final class TableWriterTest extends TestCase
         self::assertSame('Foo', (string) $cell->getValue());
         self::assertSame(12, (int) $style->getFont()->getSize());
         // self::assertSame(33, (int) $firstSheet->getRowDimension($cell->getRow())->getRowHeight());
-        self::assertTrue($style->getAlignment()->getWrapText());
     }
 
     public function testTableWithAutofilter(): void

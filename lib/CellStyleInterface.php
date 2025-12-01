@@ -8,5 +8,5 @@ use OpenSpout\Common\Entity\Style\Style;
 
 interface CellStyleInterface
 {
-    public function styleCell(Style $style): void;
+    public function styleCell(Style $style): Style;
 }

@@ -9,11 +9,11 @@ use Slam\OpenspoutHelper\ContentDecoratorInterface;
 
 final class Amount implements ContentDecoratorInterface
 {
-    public const FORMATCODE = '#,##0.00';
+    public const string FORMATCODE = '#,##0.00';
 
-    public function styleCell(Style $style): void
+    public function styleCell(Style $style): Style
     {
-        $style->setFormat(self::FORMATCODE);
+        return $style->withFormat(self::FORMATCODE);
     }
 
     public function decorate(float|int|string $content): float

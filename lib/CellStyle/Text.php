@@ -10,8 +10,8 @@ use Slam\OpenspoutHelper\CellStyleInterface;
 
 final class Text implements CellStyleInterface
 {
-    public function styleCell(Style $style): void
+    public function styleCell(Style $style): Style
     {
-        $style->setCellAlignment(CellAlignment::LEFT);
+        return $style->withCellAlignment(CellAlignment::LEFT);
     }
 }

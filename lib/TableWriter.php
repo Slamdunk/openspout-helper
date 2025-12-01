@@ -13,28 +13,23 @@ use OpenSpout\Writer\XLSX\Writer;
 
 final class TableWriter
 {
-    public const COLOR_HEADER_FONT = 'FFFFFF';
-    public const COLOR_HEADER_FILL = '4472C4';
-    public const COLOR_ODD_FILL    = 'D9E1F2';
+    public const string COLOR_HEADER_FONT = 'FFFFFF';
+    public const string COLOR_HEADER_FILL = '4472C4';
+    public const string COLOR_ODD_FILL    = 'D9E1F2';
 
-    public const COLUMN_DEFAULT_WIDTH = 10;
+    public const int COLUMN_DEFAULT_WIDTH = 10;
 
     /** @var array<string, CellStyleSpec> */
     private array $styles;
 
     public function __construct(
-        private string $emptyTableMessage = '',
-        private int $rowsPerSheet = 262144
+        private readonly string $emptyTableMessage = '',
+        private readonly int $rowsPerSheet = 262144
     ) {}
 
     /** @return Table[] */
     public function writeTable(Writer $writer, Table $table): array
     {
-        $defaultStyle = new Style();
-        $defaultStyle->setFontSize($table->getFontSize());
-        $defaultStyle->setShouldWrapText($table->getTextWrap());
-
-        $writer->getOptions()->DEFAULT_ROW_STYLE = $defaultStyle;
         // if (null !== ($rowHeight = $table->getRowHeight())) {
         //     $writer->setDefaultRowHeight($rowHeight);
         // }
@@ -86,9 +81,9 @@ final class TableWriter
 
         if (0 === $tables[0]->count()) {
             $this->writeTableHeading($writer, $table);
-            $writer->addRow(new Row([], null));
+            $writer->addRow(new Row([]));
             $table->incrementRow();
-            $writer->addRow(new Row([new Cell\StringCell($this->emptyTableMessage, null)], null));
+            $writer->addRow(new Row([new Cell\StringCell($this->emptyTableMessage, null)]));
             $table->incrementRow();
         }
 
@@ -114,20 +109,22 @@ final class TableWriter
 
         if ($table->getFreezePanes()) {
             $table->getActiveSheet()->setSheetView(
-                (new SheetView())
-                    ->setFreezeRow($table->getRowStart() + 3)
+                new SheetView(
+                    freezeRow: $table->getRowStart() + 3,
+                )
             );
         }
     }
 
     private function writeTableHeading(Writer $writer, Table $table): void
     {
-        $style = new Style();
-        $style->setShouldWrapText(false);
-        $style->setFontSize($table->getFontSize() + 2);
+        $style = new Style(
+            fontSize: $table->getFontSize() + 2,
+            shouldWrapText: false,
+        );
 
         $cell = new Cell\StringCell($table->getHeading(), $style);
-        $writer->addRow(new Row([$cell], null));
+        $writer->addRow(new Row([$cell]));
 
         $table->incrementRow();
     }
@@ -180,7 +177,7 @@ final class TableWriter
             $cells[] = Cell::fromValue($content, $style);
         }
 
-        $writer->addRow(new Row($cells, null));
+        $writer->addRow(new Row($cells));
 
         $table->incrementRow();
     }
@@ -191,26 +188,29 @@ final class TableWriter
         $columnCollection = $table->getColumnCollection();
         $this->styles     = [];
         foreach ($columnKeys as $columnKey) {
-            $header = new Style();
-            $header->setCellAlignment(CellAlignment::CENTER);
-            $header->setShouldWrapText(true);
-            $header->setBackgroundColor(self::COLOR_HEADER_FILL);
-            $header->setFontSize($table->getFontSize());
-            $header->setFontBold();
-            $header->setFontColor(self::COLOR_HEADER_FONT);
+            $header = new Style(
+                fontBold: true,
+                fontSize: $table->getFontSize(),
+                fontColor: self::COLOR_HEADER_FONT,
+                cellAlignment: CellAlignment::CENTER,
+                shouldWrapText: true,
+                backgroundColor: self::COLOR_HEADER_FILL,
+            );
 
-            $zebraLight = new Style();
-            $zebraLight->setFontSize($table->getFontSize());
+            $zebraLight = new Style(
+                fontSize: $table->getFontSize(),
+            );
 
-            $zebraDark = new Style();
-            $zebraDark->setFontSize($table->getFontSize());
-            $zebraDark->setBackgroundColor(self::COLOR_ODD_FILL);
+            $zebraDark = new Style(
+                fontSize: $table->getFontSize(),
+                backgroundColor: self::COLOR_ODD_FILL,
+            );
 
             $cellStyle = ($columnCollection[$columnKey] ?? null)?->getCellStyle();
 
             if (null !== $cellStyle) {
-                $cellStyle->styleCell($zebraLight);
-                $cellStyle->styleCell($zebraDark);
+                $zebraLight = $cellStyle->styleCell($zebraLight);
+                $zebraDark  = $cellStyle->styleCell($zebraDark);
             }
 
             $this->styles[$columnKey] = new CellStyleSpec(

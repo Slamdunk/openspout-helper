@@ -12,25 +12,25 @@ final class Table implements Countable
 {
     private Sheet $activeSheet;
 
-    /** @var 0|positive-int */
+    /** @var non-negative-int */
     private int $rowEnd;
 
-    /** @var 0|positive-int */
+    /** @var non-negative-int */
     private int $rowCurrent;
 
-    /** @var 0|positive-int */
+    /** @var non-negative-int */
     private int $rowStart;
 
-    /** @var null|0|positive-int */
+    /** @var null|non-negative-int */
     private ?int $dataRowStart = null;
 
-    /** @var 0|positive-int */
+    /** @var non-negative-int */
     private int $columnStart   = 0;
 
-    /** @var 0|positive-int */
+    /** @var non-negative-int */
     private int $columnEnd     = 0;
 
-    /** @var 0|positive-int */
+    /** @var non-negative-int */
     private int $columnCurrent = 0;
 
     private string $heading;
@@ -39,14 +39,18 @@ final class Table implements Countable
     private iterable $data;
     private ColumnCollection $columnCollection;
     private bool $freezePanes = true;
+
+    /** @var non-negative-int */
     private int $fontSize     = 8;
+
+    /** @var null|non-negative-int */
     private ?int $rowHeight   = null;
     private bool $textWrap    = false;
 
     /** @var array<int, string> */
     private array $writtenColumn       = [];
 
-    /** @var 0|positive-int */
+    /** @var null|non-negative-int */
     private ?int $count                = null;
 
     /** @param iterable<int, array<string, null|float|int|string>> $data */
@@ -68,7 +72,7 @@ final class Table implements Countable
         return $this->activeSheet;
     }
 
-    /** @return 0|positive-int */
+    /** @return non-negative-int */
     public function getDataRowStart(): int
     {
         \assert(null !== $this->dataRowStart);
@@ -81,19 +85,19 @@ final class Table implements Countable
         $this->dataRowStart = $this->rowCurrent;
     }
 
-    /** @return 0|positive-int */
+    /** @return non-negative-int */
     public function getRowStart(): int
     {
         return $this->rowStart;
     }
 
-    /** @return 0|positive-int */
+    /** @return non-negative-int */
     public function getRowEnd(): int
     {
         return $this->rowEnd;
     }
 
-    /** @return 0|positive-int */
+    /** @return non-negative-int */
     public function getRowCurrent(): int
     {
         return $this->rowCurrent;
@@ -105,13 +109,13 @@ final class Table implements Countable
         ++$this->rowCurrent;
     }
 
-    /** @return 0|positive-int */
+    /** @return non-negative-int */
     public function getColumnStart(): int
     {
         return $this->columnStart;
     }
 
-    /** @return 0|positive-int */
+    /** @return non-negative-int */
     public function getColumnEnd(): int
     {
         return $this->columnEnd;
@@ -154,21 +158,25 @@ final class Table implements Countable
         return $this->freezePanes;
     }
 
+    /** @param non-negative-int $fontSize */
     public function setFontSize(int $fontSize): void
     {
         $this->fontSize = $fontSize;
     }
 
+    /** @return non-negative-int */
     public function getFontSize(): int
     {
         return $this->fontSize;
     }
 
+    /** @param null|non-negative-int $rowHeight */
     public function setRowHeight(?int $rowHeight): void
     {
         $this->rowHeight = $rowHeight;
     }
 
+    /** @return null|non-negative-int */
     public function getRowHeight(): ?int
     {
         return $this->rowHeight;
@@ -196,12 +204,13 @@ final class Table implements Countable
         return $this->writtenColumn;
     }
 
-    /** @param 0|positive-int $count */
+    /** @param non-negative-int $count */
     public function setCount(int $count): void
     {
         $this->count = $count;
     }
 
+    /** @return non-negative-int */
     public function count(): int
     {
         if (null === $this->count) {

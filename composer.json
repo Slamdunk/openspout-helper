@@ -15,7 +15,7 @@
         "openspout/openspout": "^5.2.1"
     },
     "require-dev": {
-        "infection/infection": "^0.32.2",
+        "infection/infection": "^0.32.3",
         "phpoffice/phpspreadsheet": "^5.4.0",
         "phpstan/phpstan": "^2.1.33",
         "phpstan/phpstan-phpunit": "^2.0.11",

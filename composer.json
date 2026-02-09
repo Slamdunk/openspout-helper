@@ -15,10 +15,10 @@
         "openspout/openspout": "^5.3.0"
     },
     "require-dev": {
-        "infection/infection": "^0.32.3",
+        "infection/infection": "^0.32.4",
         "phpoffice/phpspreadsheet": "^5.4.0",
         "phpstan/phpstan": "^2.1.38",
-        "phpstan/phpstan-phpunit": "^2.0.12",
+        "phpstan/phpstan-phpunit": "^2.0.13",
         "phpunit/phpunit": "^12.5.10",
         "slam/php-cs-fixer-extensions": "^3.14.0"
     },

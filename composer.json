@@ -16,7 +16,7 @@
     },
     "require-dev": {
         "infection/infection": "^0.32.6",
-        "phpoffice/phpspreadsheet": "^5.4.0",
+        "phpoffice/phpspreadsheet": "^5.5.0",
         "phpstan/phpstan": "^2.1.40",
         "phpstan/phpstan-phpunit": "^2.0.16",
         "phpunit/phpunit": "^13.0.5",

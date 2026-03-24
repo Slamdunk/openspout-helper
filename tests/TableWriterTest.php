@@ -38,7 +38,7 @@ final class TableWriterTest extends TestCase
             ['description' => 'BBB'],
         ]);
 
-        (new TableWriter())->writeTable($XLSXWriter, $table);
+        new TableWriter()->writeTable($XLSXWriter, $table);
         $XLSXWriter->close();
 
         self::assertSame(1, $table->getRowStart());
@@ -52,7 +52,7 @@ final class TableWriterTest extends TestCase
         self::assertCount(2, $table);
         self::assertSame([0 => 'description'], $table->getWrittenColumn());
 
-        $sheet = (new Xlsx())->load($this->filename)->getActiveSheet();
+        $sheet = new Xlsx()->load($this->filename)->getActiveSheet();
 
         self::assertSame($heading, (string) $sheet->getCell([1, 2])->getValue());
         self::assertSame('Description', (string) $sheet->getCell([1, 3])->getValue());
@@ -85,10 +85,10 @@ final class TableWriterTest extends TestCase
             ['description' => $data],
         ]);
 
-        (new TableWriter())->writeTable($XLSXWriter, $table);
+        new TableWriter()->writeTable($XLSXWriter, $table);
         $XLSXWriter->close();
 
-        $sheet = (new Xlsx())->load($this->filename)->getActiveSheet();
+        $sheet = new Xlsx()->load($this->filename)->getActiveSheet();
         self::assertSame($activeSheet->getName(), $sheet->getTitle());
 
         // Heading
@@ -145,10 +145,10 @@ final class TableWriterTest extends TestCase
         ]);
         $table->setColumnCollection($columnCollection);
 
-        (new TableWriter())->writeTable($XLSXWriter, $table);
+        new TableWriter()->writeTable($XLSXWriter, $table);
         $XLSXWriter->close();
 
-        $firstSheet = (new Xlsx())->load($this->filename)->getActiveSheet();
+        $firstSheet = new Xlsx()->load($this->filename)->getActiveSheet();
 
         $expectedContent = [
             'A1' => $table->getHeading(),
@@ -310,14 +310,14 @@ final class TableWriterTest extends TestCase
             ['description' => 'EEE'],
         ]);
 
-        $tables = (new TableWriter('', 5))->writeTable($XLSXWriter, $table);
+        $tables = new TableWriter('', 5)->writeTable($XLSXWriter, $table);
         $XLSXWriter->close();
 
         self::assertCount(2, $tables);
         self::assertSame(3, $tables[0]->count());
         self::assertSame(2, $tables[1]->count());
 
-        $sheets     = (new Xlsx())->load($this->filename)->getAllSheets();
+        $sheets     = new Xlsx()->load($this->filename)->getAllSheets();
         $firstSheet = $sheets[0];
 
         $expected   = [
@@ -362,9 +362,9 @@ final class TableWriterTest extends TestCase
 
         $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid(), []);
 
-        (new TableWriter($emptyTableMessage))->writeTable($XLSXWriter, $table);
+        new TableWriter($emptyTableMessage)->writeTable($XLSXWriter, $table);
         $XLSXWriter->close();
-        $firstSheet = (new Xlsx())->load($this->filename)->getActiveSheet();
+        $firstSheet = new Xlsx()->load($this->filename)->getActiveSheet();
 
         $expected   = [
             'A1' => $table->getHeading(),
@@ -400,9 +400,9 @@ final class TableWriterTest extends TestCase
         $table->setRowHeight(33);
         $table->setTextWrap(true);
 
-        (new TableWriter())->writeTable($XLSXWriter, $table);
+        new TableWriter()->writeTable($XLSXWriter, $table);
         $XLSXWriter->close();
-        $firstSheet = (new Xlsx())->load($this->filename)->getActiveSheet();
+        $firstSheet = new Xlsx()->load($this->filename)->getActiveSheet();
 
         $cell       = $firstSheet->getCell('A3');
         $style      = $cell->getStyle();
@@ -427,7 +427,7 @@ final class TableWriterTest extends TestCase
             ],
         ]);
 
-        (new TableWriter())->writeTable($XLSXWriter, $table);
+        new TableWriter()->writeTable($XLSXWriter, $table);
         $XLSXWriter->close();
 
         $table->enableAutoFilter();
@@ -449,7 +449,7 @@ final class TableWriterTest extends TestCase
 
         $table = new Table($XLSXWriter->getCurrentSheet(), \uniqid(), []);
 
-        (new TableWriter($emptyTableMessage))->writeTable($XLSXWriter, $table);
+        new TableWriter($emptyTableMessage)->writeTable($XLSXWriter, $table);
         $XLSXWriter->close();
 
         $table->enableAutoFilter();

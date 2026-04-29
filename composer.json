@@ -12,12 +12,12 @@
     ],
     "require": {
         "php": "~8.4.0 || ~8.5.0",
-        "openspout/openspout": "^5.6.1"
+        "openspout/openspout": "^5.7.0"
     },
     "require-dev": {
         "infection/infection": "^0.32.7",
         "phpoffice/phpspreadsheet": "^5.7.0",
-        "phpstan/phpstan": "^2.1.53",
+        "phpstan/phpstan": "^2.1.54",
         "phpstan/phpstan-phpunit": "^2.0.16",
         "phpunit/phpunit": "^13.1.7",
         "slam/php-cs-fixer-extensions": "^3.15.0"

@@ -12,10 +12,10 @@
     ],
     "require": {
         "php": "~8.4.0 || ~8.5.0",
-        "openspout/openspout": "^5.10.2"
+        "openspout/openspout": "^5.10.3"
     },
     "require-dev": {
-        "infection/infection": "^0.34.2",
+        "infection/infection": "^0.35.0",
         "phpoffice/phpspreadsheet": "^5.9.0",
         "phpstan/phpstan": "^2.2.8",
         "phpstan/phpstan-phpunit": "^2.0.18",
